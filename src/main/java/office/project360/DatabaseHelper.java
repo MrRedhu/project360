@@ -10,7 +10,6 @@ public class DatabaseHelper {
     public static void insertUser(String username, String password, String role) {
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
         String sqlUser = "INSERT INTO users(username, password, role) VALUES(?,?,?)";
-
         String sqlLastId = "SELECT last_insert_rowid()";
 
         try (Connection conn = DriverManager.getConnection(URL);
@@ -18,15 +17,22 @@ public class DatabaseHelper {
              Statement stmt = conn.createStatement()) {
 
             pstmtUser.setString(1, username);
-            pstmtUser.setString(2, hashed); // Consider hashing the password
+            pstmtUser.setString(2, hashed); // Use hashed password
             pstmtUser.setString(3, role);
             int affectedRows = pstmtUser.executeUpdate();
 
-            if (affectedRows > 0 && "Patient".equals(role)) {
+            if (affectedRows > 0) {
                 try (ResultSet rs = stmt.executeQuery(sqlLastId)) {
                     if (rs.next()) {
-                        long Id = rs.getLong(1);
-                        insertPatient(conn, Id, username); // Pass the username here
+                        long Id = rs.getLong(1); // Get the user ID of the newly inserted user
+                        // Insert additional records based on the role
+                        if ("Patient".equals(role)) {
+                            insertPatient(conn, Id, username);
+                        } else if ("Doctor".equals(role)) {
+                            insertDoctor(conn, Id, username); // Pass Id here
+                        } else if ("Nurse".equals(role)) {
+                            insertNurse(conn, Id, username); // Pass Id here
+                        }
                     }
                 }
             }
@@ -34,6 +40,7 @@ public class DatabaseHelper {
             System.out.println(e.getMessage());
         }
     }
+
 
 
     private static void insertPatient(Connection conn, long userId, String username) throws SQLException {
@@ -88,5 +95,25 @@ public class DatabaseHelper {
         }
         return false;
     }
+    private static void insertDoctor(Connection conn, long userId, String username) throws SQLException {
+        String sqlDoctor = "INSERT INTO doctors(id, username) VALUES(?,?)";
+
+        try (PreparedStatement pstmtDoctor = conn.prepareStatement(sqlDoctor)) {
+            pstmtDoctor.setLong(1, userId); // Set the user ID
+            pstmtDoctor.setString(2, username);
+            pstmtDoctor.executeUpdate();
+        }
+    }
+    private static void insertNurse(Connection conn, long userId, String username) throws SQLException {
+        String sqlNurse = "INSERT INTO nurses(id, username) VALUES(?,?)";
+
+        try (PreparedStatement pstmtNurse = conn.prepareStatement(sqlNurse)) {
+            pstmtNurse.setLong(1, userId); // Set the user ID
+            pstmtNurse.setString(2, username);
+            pstmtNurse.executeUpdate();
+        }
+    }
+
+
 
 }
