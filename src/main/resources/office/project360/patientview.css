@@ -1,0 +1,40 @@
+.root {
+    -fx-background-color: maroon ;
+}
+
+/* Sidebar styles */
+.maroon-sidebar {
+    -fx-background-color:#f39300 ;
+    -fx-min-width: 20%; /* Set the minimum width to cover 20% of the screen */
+    -fx-spacing: 20; /* Space between elements */
+    -fx-padding: 20; /* Padding around the VBox */
+    -fx-alignment: top-center;
+}
+
+.maroon-sidebar .sidebar-label {
+    -fx-font-size: 20px; /* Larger text for sidebar items */
+    -fx-text-fill: white; /* White text color */
+    -fx-font-weight: bold; /* Bold font weight */
+    -fx-cursor: hand; /* Change cursor to hand on hover */
+}
+
+/* Change font color and size for hovered labels */
+.maroon-sidebar .sidebar-label:hover {
+    -fx-underline: true; /* Underline label text when hovered */
+    -fx-font-size: 22px; /* Larger font size on hover */
+}
+
+/* Button styles */
+.button {
+    -fx-background-color: #FFD700; /* Gold background for buttons */
+    -fx-text-fill: white; /* White text for buttons */
+    -fx-font-weight: bold; /* Bold font weight for button text */
+    -fx-border-color: #ffffff; /* Black border for buttons */
+    -fx-border-width: 5; /* No border width */
+    -fx-pref-width: 120; /* Increased preferred width of button */
+    -fx-pref-height: 30; /* Increased preferred height of button */
+}
+
+.button:hover {
+    -fx-background-color: #f0e68c; /* Lighter gold color on hover */
+}
