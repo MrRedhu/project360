@@ -103,7 +103,7 @@ public class DatabaseHelper {
         }
     }
     private static void insertNurse(Connection conn, long userId, String username) throws SQLException {
-        String sqlNurse = "INSERT INTO nurses(id, username) VALUES(?,?)";
+        String sqlNurse = "INSERT INTO Nurse(id, username) VALUES(?,?)";
 
         try (PreparedStatement pstmtNurse = conn.prepareStatement(sqlNurse)) {
             pstmtNurse.setLong(1, userId); // Set the user ID
@@ -121,7 +121,7 @@ public class DatabaseHelper {
         } else if ("Doctor".equals(role)) {
             sqlUpdate = "UPDATE doctors SET firstname = ?, lastname = ? WHERE id = ?";
         } else if ("Nurse".equals(role)) {
-            sqlUpdate = "UPDATE nurses SET firstname = ?, lastname = ? WHERE id = ?";
+            sqlUpdate = "UPDATE Nurse SET firstname = ?, lastname = ? WHERE id = ?";
         }
 
         if (!sqlUpdate.isEmpty()) { // Ensure the SQL statement was set
