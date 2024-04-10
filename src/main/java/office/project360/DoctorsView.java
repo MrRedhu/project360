@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class PatientIDEntry extends Application {
+public class DoctorsView extends Application {
 
     private static final double PREF_WIDTH = 300.0;
     private static final double PREF_HEIGHT = 150.0;
