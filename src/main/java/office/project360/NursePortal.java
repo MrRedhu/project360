@@ -211,6 +211,7 @@ public class NursePortal extends Application {
         Label lblHealthHistory = new Label("Health History");
         Label lblMessages = new Label("Messages");
         Label lblInsuranceCard = new Label("Insurance Card");
+        Button btnBack = new Button("Back");
         Button btnLogOut = new Button("Log Out");
 
         Label[] labels = {lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard};
@@ -223,7 +224,10 @@ public class NursePortal extends Application {
         btnLogOut.setOnMouseEntered(e-> btnLogOut.setCursor(Cursor.HAND));
         btnLogOut.setOnMouseExited(e -> btnLogOut.setCursor(Cursor.DEFAULT));
 
-        menuBox.getChildren().addAll(lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard, btnLogOut);
+        btnBack.setOnMouseEntered(e-> btnLogOut.setCursor(Cursor.HAND));
+        btnBack.setOnMouseExited(e -> btnLogOut.setCursor(Cursor.DEFAULT));
+
+        menuBox.getChildren().addAll(lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard, btnBack, btnLogOut);
 
         // Content on the right side
         GridPane contentPane = new GridPane();
