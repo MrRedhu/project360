@@ -9,13 +9,17 @@ public class DatabaseHelper {
     // Method to insert user and potentially create a patient record
     public static long insertUser(String username, String password, String role) {
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
-        String sqlUser = "INSERT INTO users(username, password, role) VALUES(?,?,?)";
-        // SQLite might not support getGeneratedKeys in the way you expect, so you might be doing this instead:
-        String sqlLastId = "SELECT last_insert_rowid()"; // Correct for SQLite
+        System.out.println("Inserting user: " + username);
 
-        long userId = -1; // Default/failure value
+
+
+        String sqlUser = "INSERT INTO users(username, password, role) VALUES(?,?,?)";
+        String sqlLastId = "SELECT last_insert_rowid()"; // SQLite-specific method to get last inserted ID
+
+        long Id = -1; // Default/failure value
         try (Connection conn = DriverManager.getConnection(URL);
-             PreparedStatement pstmtUser = conn.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS)) { // This flag is generally ignored by SQLite JDBC
+             PreparedStatement pstmtUser = conn.prepareStatement(sqlUser); // Removed the RETURN_GENERATED_KEYS flag
+             Statement stmt = conn.createStatement()) { // This is used for executing the last_insert_rowid()
 
             pstmtUser.setString(1, username);
             pstmtUser.setString(2, hashed);
@@ -23,20 +27,19 @@ public class DatabaseHelper {
             int affectedRows = pstmtUser.executeUpdate();
 
             if (affectedRows > 0) {
-                // Here's where you might encounter issues
-                // Let's use a method compatible with SQLite
-                try (Statement stmt = conn.createStatement();
-                     ResultSet rs = stmt.executeQuery(sqlLastId)) { // Execute the query to get the last inserted ID
+                try (ResultSet rs = stmt.executeQuery(sqlLastId)) { // Retrieve the last inserted ID
                     if (rs.next()) {
-                        userId = rs.getLong(1); // Retrieve the last inserted rowid
+                        Id = rs.getLong(1);
+                        System.out.println("Retrieved userId: " + Id);
                     }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return userId;
+        return Id;
     }
+
 
 
 
@@ -94,7 +97,7 @@ public class DatabaseHelper {
         return false;
     }
     private static void insertDoctor(Connection conn, long userId, String username) throws SQLException {
-        String sqlDoctor = "INSERT INTO doctors(id, username) VALUES(?,?)";
+        String sqlDoctor = "INSERT INTO Doctors(id, username) VALUES(?,?)";
 
         try (PreparedStatement pstmtDoctor = conn.prepareStatement(sqlDoctor)) {
             pstmtDoctor.setLong(1, userId); // Set the user ID
@@ -119,7 +122,7 @@ public class DatabaseHelper {
         if ("Patient".equals(role)) {
             sqlUpdate = "UPDATE patients SET FirstName = ?, LastName = ? WHERE user_id = ?";
         } else if ("Doctor".equals(role)) {
-            sqlUpdate = "UPDATE doctors SET firstname = ?, lastname = ? WHERE id = ?";
+            sqlUpdate = "UPDATE Doctors SET firstname = ?, lastname = ? WHERE id = ?";
         } else if ("Nurse".equals(role)) {
             sqlUpdate = "UPDATE Nurse SET firstname = ?, lastname = ? WHERE id = ?";
         }
