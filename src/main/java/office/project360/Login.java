@@ -30,14 +30,17 @@ public class Login {
         TextField usernameField = new TextField();
         usernameField.setPromptText("Username");
         usernameField.getStyleClass().add("text-field");
+        usernameField.setPrefSize(200, 35);
 
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
         passwordField.getStyleClass().add("text-field");
+        passwordField.setPrefSize(200, 35);
 
         ComboBox<String> roleComboBox = new ComboBox<>();
         roleComboBox.getItems().addAll("Doctor", "Patient", "Nurse");
         roleComboBox.setPromptText("Select Role");
+        roleComboBox.setPrefSize(200, 35);
 
         Button loginButton = new Button("Login");
         loginButton.getStyleClass().add("button-common");
@@ -47,17 +50,31 @@ public class Login {
                 showAlert(Alert.AlertType.WARNING, "Login Failed", "Please select a role.");
                 return;
             }
-            // Further login logic depending on the role...
             if (authenticate(usernameField.getText(), passwordField.getText(), selectedRole)) {
-                mainApp.userLoggedIn();
+                showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome to Pediatric Doctor's Office!");
+                mainApp.userLoggedIn(); // Transition to the next scene or dashboard after showing the alert
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username, password, or role.");
             }
         });
 
+
         Button registerButton = new Button("Register User");
         registerButton.getStyleClass().add("button-common");
         registerButton.getStyleClass().add("register-button");
+        registerButton.setOnAction(e -> {
+            String username = usernameField.getText();
+            String password = passwordField.getText();
+            String role = roleComboBox.getValue();
+
+            if (username.isEmpty() || password.isEmpty() || role == null) {
+                showAlert(Alert.AlertType.ERROR, "Registration Failed", "Please fill in all fields.");
+                return;
+            }
+
+            DatabaseHelper.insertUser(username, password, role);
+            showAlert(Alert.AlertType.INFORMATION, "Registration Successful", "User registered successfully.");
+        });
 
         layout.getChildren().addAll(header, usernameField, passwordField, roleComboBox, loginButton, registerButton);
 
@@ -80,9 +97,9 @@ public class Login {
     }
 
     private boolean authenticate(String username, String password, String selectedRole) {
-        // Implement authentication logic here
-        return "admin".equals(username) && "password".equals(password);
+        return DatabaseHelper.checkUserCredentials(username, password, selectedRole);
     }
+
 
     private void showAlert(Alert.AlertType alertType, String title, String content) {
         Alert alert = new Alert(alertType);
