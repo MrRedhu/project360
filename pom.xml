@@ -116,6 +116,12 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>3.43.0.0</version> <!-- Check for the latest version -->
         </dependency>
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>

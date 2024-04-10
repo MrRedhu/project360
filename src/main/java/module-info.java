@@ -3,6 +3,7 @@ module office.project360 {
     requires javafx.fxml;
     requires javafx.web;
     requires java.sql;
+    requires jbcrypt;
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;

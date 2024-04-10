@@ -1,14 +1,16 @@
 package office.project360;
 
 import java.sql.*;
-
+import org.mindrot.jbcrypt.BCrypt;
 public class DatabaseHelper {
 
     private static final String URL = "jdbc:sqlite:identifier.sqlite"; // Updated for server.sqlite
 
     // Method to insert user and potentially create a patient record
     public static void insertUser(String username, String password, String role) {
+        String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
         String sqlUser = "INSERT INTO users(username, password, role) VALUES(?,?,?)";
+
         String sqlLastId = "SELECT last_insert_rowid()";
 
         try (Connection conn = DriverManager.getConnection(URL);
@@ -16,7 +18,7 @@ public class DatabaseHelper {
              Statement stmt = conn.createStatement()) {
 
             pstmtUser.setString(1, username);
-            pstmtUser.setString(2, password); // Consider hashing the password
+            pstmtUser.setString(2, hashed); // Consider hashing the password
             pstmtUser.setString(3, role);
             int affectedRows = pstmtUser.executeUpdate();
 
@@ -68,18 +70,17 @@ public class DatabaseHelper {
         return false; // Default to false to be safe
     }
     public static boolean checkUserCredentials(String username, String password, String role) {
-        String sql = "SELECT COUNT(*) FROM users WHERE username = ? AND password = ? AND role = ?";
+        String sql = "SELECT password FROM users WHERE username = ? AND role = ?";
         try (Connection conn = DriverManager.getConnection(URL);
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, username);
-            pstmt.setString(2, password); // In real applications, hash the password
-            pstmt.setString(3, role);
+            pstmt.setString(2, role);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    int count = rs.getInt(1);
-                    return count > 0;
+                    String storedHash = rs.getString("password");
+                    return BCrypt.checkpw(password, storedHash);
                 }
             }
         } catch (SQLException e) {
@@ -87,4 +88,5 @@ public class DatabaseHelper {
         }
         return false;
     }
+
 }
