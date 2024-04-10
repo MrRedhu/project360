@@ -4,11 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8b1e1d2d-a314-4e5e-be7b-cf3a237238aa" name="Changes" comment="added login and signup functionality">
+    <list default="true" id="8b1e1d2d-a314-4e5e-be7b-cf3a237238aa" name="Changes" comment="commit test">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/9803d4d6-68c1-487b-bf84-06324b7741ab.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9803d4d6-68c1-487b-bf84-06324b7741ab.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/office/project360/DatabaseHelper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/office/project360/DatabaseHelper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,18 +26,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN",
-    "assignee": "MrRedhu"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MrRedhu&quot;
   }
-}]]></component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/MrRedhu/project360.git",
-    "accountId": "1122713e-eef2-479a-b8a0-12623e591e06"
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MrRedhu/project360.git&quot;,
+    &quot;accountId&quot;: &quot;1122713e-eef2-479a-b8a0-12623e591e06&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -56,6 +57,8 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.MainApplication.executor": "Run",
+    "Application.NursePortal.executor": "Run",
+    "Database Script.console.sql.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -73,6 +76,9 @@
   "keyToStringList": {
     "DatabaseDriversLRU": [
       "sqlite"
+    ],
+    "RunConfigurationTargetLRU": [
+      "9803d4d6-68c1-487b-bf84-06324b7741ab/schema/\"main\""
     ]
   }
 }]]></component>
@@ -80,6 +86,13 @@
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/main/resources/office/project360" />
     </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="console.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
+      <script-file value="$APPLICATION_CONFIG_DIR$/consoles/db/8be7c816-12af-4bce-b655-d5d24f0bd377/console.sql" />
+      <script-mode>FILE</script-mode>
+      <method v="2" />
+    </configuration>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -98,7 +111,7 @@
       <option name="presentableId" value="Default" />
       <updated>1712697317012</updated>
       <workItem from="1712697318067" duration="684000" />
-      <workItem from="1712712499469" duration="10362000" />
+      <workItem from="1712712499469" duration="3179000" />
     </task>
     <task id="LOCAL-00001" summary="commit test">
       <option name="closed" value="true" />
@@ -108,31 +121,7 @@
       <option name="project" value="LOCAL" />
       <updated>1712713408328</updated>
     </task>
-    <task id="LOCAL-00002" summary="added login page">
-      <option name="closed" value="true" />
-      <created>1712717947292</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1712717947292</updated>
-    </task>
-    <task id="LOCAL-00003" summary="modified login page">
-      <option name="closed" value="true" />
-      <created>1712720128484</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1712720128484</updated>
-    </task>
-    <task id="LOCAL-00004" summary="added login and signup functionality">
-      <option name="closed" value="true" />
-      <created>1712728174391</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1712728174391</updated>
-    </task>
-    <option name="localTasksCounter" value="5" />
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -140,9 +129,21 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="commit test" />
-    <MESSAGE value="added login page" />
-    <MESSAGE value="modified login page" />
-    <MESSAGE value="added login and signup functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="added login and signup functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit test" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-method">
+          <url>file://$PROJECT_DIR$/src/main/java/office/project360/MainApplication.java</url>
+          <line>9</line>
+          <properties class="office.project360.MainApplication" method="start">
+            <option name="EMULATED" value="true" />
+            <option name="WATCH_EXIT" value="false" />
+          </properties>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
