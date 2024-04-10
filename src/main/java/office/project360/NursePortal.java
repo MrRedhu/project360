@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -205,6 +206,8 @@ public class NursePortal extends Application {
 
         // Menu on the left side
         VBox menuBox = new VBox(10);
+        HBox buttonsBox = new HBox(10);
+        buttonsBox.setPadding(new Insets(20));
         menuBox.setPadding(new Insets(15));
         Label lblProfile = new Label("Profile");
         Label lblPatientVitals = new Label("Patient Vitals");
@@ -221,13 +224,14 @@ public class NursePortal extends Application {
             label.setOnMouseExited(e -> label.setCursor(Cursor.DEFAULT));
         }
 
+        btnBack.setOnMouseEntered(e-> btnBack.setCursor(Cursor.HAND));
+        btnBack.setOnMouseExited(e -> btnBack.setCursor(Cursor.DEFAULT));
+
         btnLogOut.setOnMouseEntered(e-> btnLogOut.setCursor(Cursor.HAND));
         btnLogOut.setOnMouseExited(e -> btnLogOut.setCursor(Cursor.DEFAULT));
 
-        btnBack.setOnMouseEntered(e-> btnLogOut.setCursor(Cursor.HAND));
-        btnBack.setOnMouseExited(e -> btnLogOut.setCursor(Cursor.DEFAULT));
-
-        menuBox.getChildren().addAll(lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard, btnBack, btnLogOut);
+        menuBox.getChildren().addAll(lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard);
+        buttonsBox.getChildren().addAll(btnBack, btnLogOut);
 
         // Content on the right side
         GridPane contentPane = new GridPane();
@@ -246,6 +250,7 @@ public class NursePortal extends Application {
         // Assemble the BorderPane
         borderPane.setLeft(menuBox);
         borderPane.setCenter(contentPane);
+        borderPane.setBottom(buttonsBox);
 
         // Initial view
         borderPane.setCenter(createProfileContent());
