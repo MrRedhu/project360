@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -215,6 +216,8 @@ public class NursePortal extends Application {
         BorderPane borderPane = new BorderPane();
         Image forkEm = new Image("file:src/main/resources/office/project360/Image_Fork'em.png");
         BackgroundImage bgImg = new BackgroundImage(forkEm, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        ImageView imageView = new ImageView(forkEm);
+        imageView.setOpacity(0.5);
         borderPane.setBackground(new Background(bgImg));
 
         // Menu on the left side
