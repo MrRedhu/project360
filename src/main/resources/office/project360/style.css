@@ -10,7 +10,7 @@
 .text-field {
     -fx-background-color: #ffffff;
     -fx-pref-height: 35px; /* Adjust height as necessary */
-    -fx-pref-width: 250px; /* Adjust width as necessary */
+    -fx-pref-width: 200px; /* Adjust width as necessary */
     -fx-padding: 5px;
 }
 
@@ -32,4 +32,23 @@
 .register-button {
     -fx-background-color: #4e4e4e;
     -fx-border: 2px solid #ffffff; /* White border */
+}
+.combo-box {
+    -fx-pref-width: 200px; /* Adjust width as needed */
+    -fx-pref-height: 35px; /* Adjust height as needed */
+    -fx-font-size: 16px; /* Adjust font size as needed for better visibility */
+    -fx-border-color: #4e4e4e;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px 10px; /* Adjust padding as needed, adds internal padding */
+}
+
+.combo-box .list-cell {
+    -fx-padding: 10px; /* Increases the padding for the dropdown items, making them taller */
+    -fx-font-size: 16px; /* Ensures the dropdown items match the ComboBox text size */
+}
+.combo-box-base .arrow-button .arrow {
+    -fx-background-color: #4e4e4e;
+}
+.combo-box .list-cell:hover {
+    -fx-background-color: #f2f2f2;
 }

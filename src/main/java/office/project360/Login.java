@@ -35,13 +35,23 @@ public class Login {
         passwordField.setPromptText("Password");
         passwordField.getStyleClass().add("text-field");
 
+        ComboBox<String> roleComboBox = new ComboBox<>();
+        roleComboBox.getItems().addAll("Doctor", "Patient", "Nurse");
+        roleComboBox.setPromptText("Select Role");
+
         Button loginButton = new Button("Login");
         loginButton.getStyleClass().add("button-common");
         loginButton.setOnAction(e -> {
-            if (authenticate(usernameField.getText(), passwordField.getText())) {
+            String selectedRole = roleComboBox.getValue();
+            if (selectedRole == null) {
+                showAlert(Alert.AlertType.WARNING, "Login Failed", "Please select a role.");
+                return;
+            }
+            // Further login logic depending on the role...
+            if (authenticate(usernameField.getText(), passwordField.getText(), selectedRole)) {
                 mainApp.userLoggedIn();
             } else {
-                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username or password.");
+                showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username, password, or role.");
             }
         });
 
@@ -49,7 +59,7 @@ public class Login {
         registerButton.getStyleClass().add("button-common");
         registerButton.getStyleClass().add("register-button");
 
-        layout.getChildren().addAll(header, usernameField, passwordField, loginButton, registerButton);
+        layout.getChildren().addAll(header, usernameField, passwordField, roleComboBox, loginButton, registerButton);
 
         Image backgroundImage = new Image(getClass().getResourceAsStream("/office/project360/test.png"));
         ImageView backgroundImageView = new ImageView(backgroundImage);
@@ -64,11 +74,12 @@ public class Login {
     }
 
 
+
     public Scene getScene() {
         return this.scene; // Ensure this method returns the initialized scene
     }
 
-    private boolean authenticate(String username, String password) {
+    private boolean authenticate(String username, String password, String selectedRole) {
         // Implement authentication logic here
         return "admin".equals(username) && "password".equals(password);
     }
