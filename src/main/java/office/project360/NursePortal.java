@@ -1,21 +1,28 @@
 package office.project360;
 
 import javafx.application.Application;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class NursePortal extends Application {
@@ -25,6 +32,7 @@ public class NursePortal extends Application {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20));
+        grid.setAlignment(Pos.TOP_CENTER);
 
         grid.add(new Label("Username:"), 0, 0);
         grid.add(new TextField(), 1, 0);
@@ -52,6 +60,7 @@ public class NursePortal extends Application {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20));
+        grid.setAlignment(Pos.TOP_CENTER);
 
         grid.add(new Label("Weight:"), 0, 0);
         grid.add(new TextField(), 1, 0);
@@ -70,7 +79,7 @@ public class NursePortal extends Application {
 
         Button btnSubmitVitals = new Button("Submit Vitals");
         grid.add(btnSubmitVitals, 1, 5);
-//        GridPane.setHalignment(btnSubmitVitals, HPos.RIGHT);
+        GridPane.setHalignment(btnSubmitVitals, HPos.RIGHT);
 
         // Event handling for the submit button
         btnSubmitVitals.setOnAction(event -> {
@@ -85,6 +94,7 @@ public class NursePortal extends Application {
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20));
+        grid.setAlignment(Pos.TOP_CENTER);
 
         grid.add(new Label("Patient's Medical History"), 0, 0, 2, 1);
 
@@ -203,25 +213,41 @@ public class NursePortal extends Application {
     @Override
     public void start(Stage primaryStage) {
         BorderPane borderPane = new BorderPane();
+        Image forkEm = new Image("file:src/main/resources/office/project360/Image_Fork'em.png");
+        BackgroundImage bgImg = new BackgroundImage(forkEm, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
+        borderPane.setBackground(new Background(bgImg));
 
         // Menu on the left side
         VBox menuBox = new VBox(10);
         HBox buttonsBox = new HBox(10);
         buttonsBox.setPadding(new Insets(20));
-        menuBox.setPadding(new Insets(15));
+        menuBox.setPadding(new Insets(20));
         Label lblProfile = new Label("Profile");
-        Label lblPatientVitals = new Label("Patient Vitals");
+        Label lblPatientVitals = new Label("Patient's Vitals");
         Label lblHealthHistory = new Label("Health History");
         Label lblMessages = new Label("Messages");
         Label lblInsuranceCard = new Label("Insurance Card");
         Button btnBack = new Button("Back");
         Button btnLogOut = new Button("Log Out");
 
+        HBox topBox = new HBox(0);
+        VBox rightBox = new VBox(0);
+        topBox.setPadding(new Insets(20));
+        rightBox.setPadding(new Insets(20));
+        Color backgroundColor = Color.web("#32051e");
+        BackgroundFill backgroundFill = new BackgroundFill(backgroundColor, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        menuBox.setBackground(background);
+        buttonsBox.setBackground(background);
+        topBox.setBackground(background);
+        rightBox.setBackground(background);
+
         Label[] labels = {lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard};
 
         for (Label label : labels) {
             label.setOnMouseEntered(e -> label.setCursor(Cursor.HAND));
             label.setOnMouseExited(e -> label.setCursor(Cursor.DEFAULT));
+            label.setStyle("-fx-text-fill: white;");
         }
 
         btnBack.setOnMouseEntered(e-> btnBack.setCursor(Cursor.HAND));
@@ -232,6 +258,9 @@ public class NursePortal extends Application {
 
         menuBox.getChildren().addAll(lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard);
         buttonsBox.getChildren().addAll(btnBack, btnLogOut);
+
+        buttonsBox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(buttonsBox, Priority.ALWAYS);
 
         // Content on the right side
         GridPane contentPane = new GridPane();
@@ -251,6 +280,14 @@ public class NursePortal extends Application {
         borderPane.setLeft(menuBox);
         borderPane.setCenter(contentPane);
         borderPane.setBottom(buttonsBox);
+        borderPane.setTop(topBox);
+        borderPane.setRight(rightBox);
+
+        borderPane.setMargin(topBox, new Insets(0));
+        borderPane.setMargin(rightBox, new Insets(0));
+        borderPane.setMargin(menuBox, new Insets(0));
+        borderPane.setMargin(contentPane, new Insets(0));
+        borderPane.setMargin(buttonsBox, new Insets(0));
 
         // Initial view
         borderPane.setCenter(createProfileContent());
