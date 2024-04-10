@@ -1,0 +1,35 @@
+
+
+.header-label {
+    -fx-font-size: 36px; /* Adjust size as necessary */
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+.text-field {
+    -fx-background-color: #ffffff;
+    -fx-pref-height: 35px; /* Adjust height as necessary */
+    -fx-pref-width: 250px; /* Adjust width as necessary */
+    -fx-padding: 5px;
+}
+
+.button-common {
+    -fx-background-color: #4e4e4e; /* Dark grey */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-pref-height: 35px;
+    -fx-pref-width: 120px;
+    -fx-border-radius: 20; /* Circular edges */
+    -fx-background-radius: 20;
+}
+
+.button-common:hover {
+    -fx-background-color: #767676; /* Lighter grey on hover */
+}
+
+/* If you want a transparent button with a white border */
+.register-button {
+    -fx-background-color: #4e4e4e;
+    -fx-border: 2px solid #ffffff; /* White border */
+}
