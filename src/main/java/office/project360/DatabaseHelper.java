@@ -31,6 +31,13 @@ public class DatabaseHelper {
                     if (rs.next()) {
                         Id = rs.getLong(1);
                         System.out.println("Retrieved userId: " + Id);
+                            if ("Patient".equals(role)) {
+                                insertPatient(conn, Id, username);
+                            } else if ("Doctor".equals(role)) {
+                                insertDoctor(conn, Id, username); // Pass Id here
+                            } else if ("Nurse".equals(role)) {
+                                insertNurse(conn, Id, username); // Pass Id here
+                        }
                     }
                 }
             }
