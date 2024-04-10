@@ -1,5 +1,4 @@
 package office.project360;
-
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -20,31 +19,31 @@ public class PatientIDEntry extends Application {
     }
 
     private Scene createMainScene() {
-        ListView<String> navigation = new ListView<>();
-        navigation.getItems().addAll(
-                "Previous Health Issues",
-                "Previously Prescribed Medications",
-                "History of Immunization",
-                "Add Test Findings",
-                "Add Prescription Needed"
-        );
+        VBox navigation = new VBox();
         navigation.setPrefWidth(250);
         navigation.setPadding(new Insets(10));
 
+        Accordion healthHistoryAccordion = new Accordion();
+
+        TitledPane healthIssuesPane = new TitledPane("Previous Health Issues", createContentArea("Previous Health Issues:"));
+        TitledPane medicationsPane = new TitledPane("Previously Prescribed Medications", createContentArea("Previously Prescribed Medications:"));
+        TitledPane immunizationPane = new TitledPane("History of Immunization", createContentArea("History of Immunization:"));
+
+        healthHistoryAccordion.getPanes().addAll(healthIssuesPane, medicationsPane, immunizationPane);
+
+        Button testFindingsButton = new Button("Add Test Findings");
+        Button prescriptionNeededButton = new Button("Add Prescription Needed");
+
         StackPane contentArea = new StackPane();
+
+        testFindingsButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Test Findings:")));
+        prescriptionNeededButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Prescription Needed:")));
+
+        navigation.getChildren().addAll(new TitledPane("Health History", healthHistoryAccordion), testFindingsButton, prescriptionNeededButton);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(navigation);
         borderPane.setCenter(contentArea);
-
-        navigation.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            contentArea.getChildren().clear();
-            if (newValue != null) {
-                contentArea.getChildren().add(createContentArea(newValue));
-            }
-        });
-
-        navigation.getSelectionModel().select(0);
 
         return new Scene(borderPane, 800, 600);
     }
@@ -53,30 +52,27 @@ public class PatientIDEntry extends Application {
         Label label = new Label(title);
         TextArea textArea = new TextArea();
         textArea.setPrefSize(PREF_WIDTH, PREF_HEIGHT);
-
-        Button btnSave = new Button("Save");
-        btnSave.setOnAction(event -> saveInformation(textArea.getText(), title));
-
-        Button btnCancel = new Button("Cancel");
-        btnCancel.setOnAction(event -> textArea.clear());
-
-        HBox buttonBar = null;
-        if (title.equals("Add Test Findings") || title.equals("Add Prescription Needed")) {
-            buttonBar = new HBox(10, btnSave, btnCancel);
-            buttonBar.setPadding(new Insets(10));
-        }
-
         VBox box = new VBox(10, label, textArea);
-        if (buttonBar != null) {
-            box.getChildren().add(buttonBar);
-        }
         box.setPadding(new Insets(10));
         return box;
     }
 
+    private VBox createContentAreaWithButtons(String title) {
+        VBox box = createContentArea(title);
+        Button btnSave = new Button("Save");
+        Button btnCancel = new Button("Cancel");
+
+        btnSave.setOnAction(event -> saveInformation(((TextArea) box.getChildren().get(1)).getText(), title));
+        btnCancel.setOnAction(event -> ((TextArea) box.getChildren().get(1)).clear());
+
+        HBox buttonBar = new HBox(10, btnSave, btnCancel);
+        buttonBar.setPadding(new Insets(10));
+        box.getChildren().add(buttonBar);
+
+        return box;
+    }
+
     private void saveInformation(String text, String category) {
-        // Implement the save logic here
-        // For example, save to a database, or a file
         System.out.println("Information saved for " + category + ": " + text);
         // TODO: Replace the above line with actual save functionality
     }
@@ -85,6 +81,7 @@ public class PatientIDEntry extends Application {
         launch(args);
     }
 }
+
 
 
 
