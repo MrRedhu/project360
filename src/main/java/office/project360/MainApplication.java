@@ -11,8 +11,10 @@ public class MainApplication extends Application {
         this.primaryStage = primaryStage;
         showLoginScreen();
     }
-
-    private void showLoginScreen() {
+    public Stage getPrimaryStage() {
+        return primaryStage; // Return the primary stage to other classes
+    }
+    public void showLoginScreen() {
         Login loginScreen = new Login(this); // Adjusted the class name to follow Java naming conventions
         primaryStage.setScene(loginScreen.getScene());
         primaryStage.setTitle("Login");

@@ -7,39 +7,37 @@ public class DatabaseHelper {
     private static final String URL = "jdbc:sqlite:identifier.sqlite"; // Updated for server.sqlite
 
     // Method to insert user and potentially create a patient record
-    public static void insertUser(String username, String password, String role) {
+    public static long insertUser(String username, String password, String role) {
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
         String sqlUser = "INSERT INTO users(username, password, role) VALUES(?,?,?)";
-        String sqlLastId = "SELECT last_insert_rowid()";
+        // SQLite might not support getGeneratedKeys in the way you expect, so you might be doing this instead:
+        String sqlLastId = "SELECT last_insert_rowid()"; // Correct for SQLite
 
+        long userId = -1; // Default/failure value
         try (Connection conn = DriverManager.getConnection(URL);
-             PreparedStatement pstmtUser = conn.prepareStatement(sqlUser);
-             Statement stmt = conn.createStatement()) {
+             PreparedStatement pstmtUser = conn.prepareStatement(sqlUser, Statement.RETURN_GENERATED_KEYS)) { // This flag is generally ignored by SQLite JDBC
 
             pstmtUser.setString(1, username);
-            pstmtUser.setString(2, hashed); // Use hashed password
+            pstmtUser.setString(2, hashed);
             pstmtUser.setString(3, role);
             int affectedRows = pstmtUser.executeUpdate();
 
             if (affectedRows > 0) {
-                try (ResultSet rs = stmt.executeQuery(sqlLastId)) {
+                // Here's where you might encounter issues
+                // Let's use a method compatible with SQLite
+                try (Statement stmt = conn.createStatement();
+                     ResultSet rs = stmt.executeQuery(sqlLastId)) { // Execute the query to get the last inserted ID
                     if (rs.next()) {
-                        long Id = rs.getLong(1); // Get the user ID of the newly inserted user
-                        // Insert additional records based on the role
-                        if ("Patient".equals(role)) {
-                            insertPatient(conn, Id, username);
-                        } else if ("Doctor".equals(role)) {
-                            insertDoctor(conn, Id, username); // Pass Id here
-                        } else if ("Nurse".equals(role)) {
-                            insertNurse(conn, Id, username); // Pass Id here
-                        }
+                        userId = rs.getLong(1); // Retrieve the last inserted rowid
                     }
                 }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+        return userId;
     }
+
 
 
 
@@ -114,6 +112,40 @@ public class DatabaseHelper {
         }
     }
 
+    public static void updateNames(long userId, String role, String firstName, String lastName) {
+        String sqlUpdate = "";
+
+        // Determine the correct SQL statement based on the user's role
+        if ("Patient".equals(role)) {
+            sqlUpdate = "UPDATE patients SET FirstName = ?, LastName = ? WHERE user_id = ?";
+        } else if ("Doctor".equals(role)) {
+            sqlUpdate = "UPDATE doctors SET firstname = ?, lastname = ? WHERE id = ?";
+        } else if ("Nurse".equals(role)) {
+            sqlUpdate = "UPDATE nurses SET firstname = ?, lastname = ? WHERE id = ?";
+        }
+
+        if (!sqlUpdate.isEmpty()) { // Ensure the SQL statement was set
+            try (Connection conn = DriverManager.getConnection(URL);
+                 PreparedStatement pstmt = conn.prepareStatement(sqlUpdate)) {
+                // Set the parameters for the prepared statement
+                pstmt.setString(1, firstName);
+                pstmt.setString(2, lastName);
+                pstmt.setLong(3, userId);
+
+                // Execute the update
+                int affectedRows = pstmt.executeUpdate();
+                if (affectedRows == 0) {
+                    // Handle the case where the update didn't affect any rows (e.g., user ID not found)
+                    System.out.println("Update failed: User ID not found or role does not match.");
+                }
+            } catch (SQLException e) {
+                System.out.println("Database error occurred during name update: " + e.getMessage());
+            }
+        } else {
+            // Handle the case where the role was not recognized
+            System.out.println("Update failed: Role not recognized.");
+        }
+    }
 
 
 }

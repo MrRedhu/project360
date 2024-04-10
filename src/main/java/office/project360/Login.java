@@ -72,9 +72,17 @@ public class Login {
                 return;
             }
 
-            DatabaseHelper.insertUser(username, password, role);
-            showAlert(Alert.AlertType.INFORMATION, "Registration Successful", "User registered successfully.");
+            // Call insertUser and check if the registration was successful
+            long userId = DatabaseHelper.insertUser(username, password, role);
+            if (userId != -1) {
+                showAlert(Alert.AlertType.INFORMATION, "Registration Successful", "Please enter your name details.");
+                // Transition to the name entry scene
+                showNameEntryScene(userId, role); // Assuming showNameEntryScene is defined within this class or accessible from here
+            } else {
+                showAlert(Alert.AlertType.ERROR, "Registration Failed", "An error occurred.");
+            }
         });
+
 
         layout.getChildren().addAll(header, usernameField, passwordField, roleComboBox, loginButton, registerButton);
 
@@ -90,6 +98,30 @@ public class Login {
         this.scene.getStylesheets().add(getClass().getResource("/office/project360/style.css").toExternalForm());
     }
 
+    public void showNameEntryScene(long userId, String role) {
+        VBox layout = new VBox(20);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20, 50, 20, 50));
+
+        TextField firstNameField = new TextField();
+        firstNameField.setPromptText("First Name");
+        TextField lastNameField = new TextField();
+        lastNameField.setPromptText("Last Name");
+
+        Button submitButton = new Button("Submit");
+        submitButton.setOnAction(e -> {
+            DatabaseHelper.updateNames(userId, role, firstNameField.getText(), lastNameField.getText());
+            // Optionally, you can redirect the user to the login page or dashboard here.
+            // For example, to go back to the login scene:
+            mainApp.showLoginScreen(); // Assuming 'showLoginScene' is a method in MainApplication to display the login scene.
+        });
+
+        layout.getChildren().addAll(new Label("Enter your details"), firstNameField, lastNameField, submitButton);
+
+        Scene nameEntryScene = new Scene(layout, 400, 300);
+        // Set this new scene to the stage
+        mainApp.getPrimaryStage().setScene(nameEntryScene); // Assuming 'mainApp' has a method 'getPrimaryStage' that returns the primary stage of the application
+    }
 
 
     public Scene getScene() {
