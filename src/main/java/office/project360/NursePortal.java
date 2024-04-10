@@ -283,12 +283,6 @@ public class NursePortal extends Application {
         borderPane.setTop(topBox);
         borderPane.setRight(rightBox);
 
-        borderPane.setMargin(topBox, new Insets(0));
-        borderPane.setMargin(rightBox, new Insets(0));
-        borderPane.setMargin(menuBox, new Insets(0));
-        borderPane.setMargin(contentPane, new Insets(0));
-        borderPane.setMargin(buttonsBox, new Insets(0));
-
         // Initial view
         borderPane.setCenter(createProfileContent());
 
