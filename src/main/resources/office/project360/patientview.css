@@ -42,3 +42,14 @@
 .diagnosis-label {
     -fx-text-fill: white; /* Set text color to white */
 }
+
+.profile-label {
+    -fx-text-fill: white; /* Set text color to white */
+}
+
+.details-heading-label {
+    -fx-font-size: 70px; /* Set font size to 70px */
+    -fx-text-fill: white; /* Set text color to white */
+}
+
+
