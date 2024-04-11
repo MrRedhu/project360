@@ -65,25 +65,25 @@ public class NursePortal {
 
         Scene scene = new Scene(borderPane, 800, 600);
         primaryStage.setTitle("Nurse Dashboard");
+
         primaryStage.setScene(scene);
+
     }
 
     private HBox setupButtonsBox() {
         HBox buttonsBox = new HBox(13);
         buttonsBox.setPadding(new Insets(20));
         buttonsBox.setAlignment(Pos.CENTER);
-        Button btnBack = new Button("Back");
-        Button btnLogOut = new Button("Log Out");
 
-        btnBack.setOnMouseEntered(e-> btnBack.setCursor(Cursor.HAND));
-        btnBack.setOnMouseExited(e -> btnBack.setCursor(Cursor.DEFAULT));
+        Button btnLogOut = new Button("Log Out");
+        btnLogOut.setOnAction(e -> mainApp.showLoginScreen());
+
         btnLogOut.setOnMouseEntered(e-> btnLogOut.setCursor(Cursor.HAND));
         btnLogOut.setOnMouseExited(e -> btnLogOut.setCursor(Cursor.DEFAULT));
 
-        buttonsBox.getChildren().addAll(btnBack, btnLogOut);
+        buttonsBox.getChildren().addAll(btnLogOut);
         return buttonsBox;
     }
-
     private VBox setupMenuBox() {
         VBox menuBox = new VBox(10);
         menuBox.setPadding(new Insets(20));
