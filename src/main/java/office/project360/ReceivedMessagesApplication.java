@@ -28,7 +28,7 @@ public class ReceivedMessagesApplication extends Application {
     private TableView<Message> tableView;
 
     @Override
-    @Override
+
     public void start(Stage primaryStage) {
         Button showMessagesButton = new Button("Show Messages");
         showMessagesButton.setOnAction(e -> {
