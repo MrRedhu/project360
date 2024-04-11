@@ -4,12 +4,12 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class DoctorsView {
     private MainApplication mainApp; // Reference to the main application
+    private String username;
 
     private static final double PREF_WIDTH = 300.0;
     private static final double PREF_HEIGHT = 150.0;
@@ -32,6 +32,9 @@ public class DoctorsView {
 
         Accordion healthHistoryAccordion = new Accordion();
 
+        Label lblUsername = new Label("Username:");
+        TextField txtUsername = new TextField();
+        Button btnFetchUsername = new Button("Fetch Username");
         TitledPane healthIssuesPane = new TitledPane("Previous Health Issues", createContentArea("Previous Health Issues:"));
         TitledPane medicationsPane = new TitledPane("Previously Prescribed Medications", createContentArea("Previously Prescribed Medications:"));
         TitledPane immunizationPane = new TitledPane("History of Immunization", createContentArea("History of Immunization:"));
@@ -40,6 +43,7 @@ public class DoctorsView {
 
         Button testFindingsButton = new Button("Add Test Findings");
         Button prescriptionNeededButton = new Button("Add Prescription Needed");
+        Button messages = new Button("Messages");
         Button logoutButton = new Button("Logout"); // Logout button
 
         // Adding extra space before the logout button
@@ -51,9 +55,17 @@ public class DoctorsView {
         testFindingsButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Test Findings:")));
         prescriptionNeededButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Prescription Needed:")));
         logoutButton.setOnAction(e -> mainApp.showLoginScreen()); // Set action for logout button
+        messages.setOnMouseClicked(event -> {
+            // This line instantiates your MessageApp
+            MessageApp messageApp = new MessageApp(username);
+            // Creates a new stage for the message application
+            Stage messageStage = new Stage();
+            // Starts the MessageApp using the new stage
+            messageApp.start(messageStage);
+        });
 
         // Adding the spacer before the logout button
-        navigation.getChildren().addAll(new TitledPane("Health History", healthHistoryAccordion), testFindingsButton, prescriptionNeededButton, spacer, logoutButton);
+        navigation.getChildren().addAll(lblUsername, txtUsername, btnFetchUsername, new TitledPane("Health History", healthHistoryAccordion), testFindingsButton, prescriptionNeededButton, messages, spacer, logoutButton);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(navigation);
@@ -64,9 +76,6 @@ public class DoctorsView {
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
                 new BackgroundSize(100, 100, true, true, true, true));
-//        ImageView imageView = new ImageView(forkEm);
-//        imageView.fitWidthProperty().bind(primaryStage.widthProperty());
-//        imageView.fitHeightProperty().bind(primaryStage.heightProperty());
         borderPane.setBackground(new Background(bgImg));
 
         return new Scene(borderPane, 800, 600);

@@ -1,31 +1,25 @@
 package office.project360;
 
-import javafx.geometry.HPos;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
@@ -138,8 +132,8 @@ public class NursePortal {
         TextField txtUsername = new TextField();
         grid.add(txtUsername, 1, 0);
 
-        Button btnFetchName = new Button("Fetch Name");
-        grid.add(btnFetchName, 2, 0);
+        Button btnFetchUsername = new Button("Fetch Username");
+        grid.add(btnFetchUsername, 2, 0);
 
         Label lblFirstName = new Label("First Name:");
         lblFirstName.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
@@ -221,7 +215,7 @@ public class NursePortal {
         });
 
         // Event handler for fetching name when button is clicked
-        btnFetchName.setOnAction(new EventHandler<ActionEvent>() {
+        btnFetchUsername.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 String username = txtUsername.getText().trim();
