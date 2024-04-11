@@ -8,15 +8,17 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class DoctorsView {
-    private MainApplication mainApp; // Reference to the main application
-    private String username;
 
+    private MainApplication mainApp;
+    private String username;
     private static final double PREF_WIDTH = 300.0;
     private static final double PREF_HEIGHT = 150.0;
 
     // Modified constructor to accept MainApplication instance
-    public DoctorsView(MainApplication mainApp) {
+
+    public DoctorsView(MainApplication mainApp, String username) {
         this.mainApp = mainApp;
+        this.username = username;
     }
 
     public void show(Stage primaryStage) {
