@@ -15,6 +15,20 @@ import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+
 public class NursePortal {
 
     private BorderPane borderPane = new BorderPane();
@@ -90,6 +104,9 @@ public class NursePortal {
         return menuBox;
     }
 
+    // Database connection parameters
+    private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
+
     private GridPane createProfileContent() {
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -98,38 +115,146 @@ public class NursePortal {
         grid.setAlignment(Pos.TOP_CENTER);
 
         Label lblUsername = new Label("Username:");
-        lblUsername.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
+        lblUsername.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblUsername, 0, 0);
-        grid.add(new TextField(), 1, 0);
+        TextField txtUsername = new TextField();
+        grid.add(txtUsername, 1, 0);
 
-        Label lblName = new Label("Name:");
-        lblName.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
-        grid.add(lblName, 0, 1);
-        grid.add(new TextField(), 1, 1);
+        Button btnFetchName = new Button("Fetch Name");
+        grid.add(btnFetchName, 2, 0);
+
+        Label lblFirstName = new Label("First Name:");
+        lblFirstName.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
+        grid.add(lblFirstName, 0, 1);
+
+        // TextField for displaying patient's first name
+        TextField txtFirstName = new TextField();
+        grid.add(txtFirstName, 1, 1);
+
+        Label lblLastName = new Label("Last Name:");
+        lblLastName.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
+        grid.add(lblLastName, 0, 2);
+
+        // TextField for displaying patient's last name
+        TextField txtLastName = new TextField();
+        grid.add(txtLastName, 1, 2);
 
         Label lblDateOfBirth = new Label("Date of Birth:");
-        lblDateOfBirth.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
-        grid.add(lblDateOfBirth, 0, 2);
-        grid.add(new TextField(), 1, 2);
+        lblDateOfBirth.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
+        grid.add(lblDateOfBirth, 0, 3);
+        TextField txtDateOfBirth = new TextField(); // Store the reference for later use
+        grid.add(txtDateOfBirth, 1, 3);
 
         Label lblEmail = new Label("Email:");
-        lblEmail.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
-        grid.add(lblEmail, 0, 3);
-        grid.add(new TextField(), 1, 3);
+        lblEmail.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
+        grid.add(lblEmail, 0, 4);
+        TextField txtEmail = new TextField(); // Store the reference for later use
+        grid.add(txtEmail, 1, 4);
 
         Label lblPhoneNumber = new Label("Phone Number:");
-        lblPhoneNumber.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
-        grid.add(lblPhoneNumber, 0, 4);
-        grid.add(new TextField(), 1, 4);
+        lblPhoneNumber.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
+        grid.add(lblPhoneNumber, 0, 5);
+        TextField txtPhoneNumber = new TextField(); // Store the reference for later use
+        grid.add(txtPhoneNumber, 1, 5);
 
         Button btnSave = new Button("Save");
         Button btnCancel = new Button("Cancel");
-        grid.add(btnSave, 1, 5);
-        grid.add(btnCancel, 2, 5);
+        grid.add(btnSave, 1, 6);
+        grid.add(btnCancel, 2, 6);
+
+        // Event handler for Save button
+        btnSave.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String username = txtUsername.getText().trim();
+                String dateOfBirth = txtDateOfBirth.getText().trim();
+                String email = txtEmail.getText().trim();
+                String phoneNumber = txtPhoneNumber.getText().trim();
+                if (!username.isEmpty() && !dateOfBirth.isEmpty() && !email.isEmpty() && !phoneNumber.isEmpty()) {
+                    updatePatientInfo(username, dateOfBirth, email, phoneNumber);
+                    // Reset all fields
+                    txtUsername.setText("");
+                    txtFirstName.setText("");
+                    txtLastName.setText("");
+                    txtDateOfBirth.setText("");
+                    txtEmail.setText("");
+                    txtPhoneNumber.setText("");
+                    // Show success alert
+                    showAlert(AlertType.INFORMATION, "Success", "Information updated successfully.");
+                } else {
+                    // Handle empty fields error
+                    showAlert(AlertType.ERROR, "Error", "Please fill in all fields.");
+                }
+            }
+        });
+
+        // Event handler for fetching name when button is clicked
+        btnFetchName.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String username = txtUsername.getText().trim();
+                if (!username.isEmpty()) {
+                    String[] names = fetchPatientName(username);
+                    if (names != null && names.length == 2) {
+                        txtFirstName.setText(names[0]);
+                        txtLastName.setText(names[1]);
+                    }
+                }
+            }
+        });
 
         // Handle Save and Cancel button actions here
 
         return grid;
+    }
+
+    // Method to fetch patient's name from the database based on username
+    private String[] fetchPatientName(String username) {
+        String[] names = new String[2];
+
+        try (Connection connection = DriverManager.getConnection(DB_URL)) {
+            String query = "SELECT FirstName, LastName FROM patients WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                names[0] = resultSet.getString("FirstName");
+                names[1] = resultSet.getString("LastName");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return names;
+    }
+
+    // Method to show an alert
+    private void showAlert(AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    // Method to update patient info in the database
+    private void updatePatientInfo(String username, String dateOfBirth, String email, String phoneNumber) {
+        try (Connection connection = DriverManager.getConnection(DB_URL)) {
+            String query = "UPDATE patients SET DateOfBirth = ?, Email = ?, PhoneNumber = ? WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, dateOfBirth);
+            preparedStatement.setString(2, email);
+            preparedStatement.setString(3, phoneNumber);
+            preparedStatement.setString(4, username);
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Added Patient Info");
+            } else {
+                System.out.println("Update Failed");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private GridPane createPatientVitalsContent() {
