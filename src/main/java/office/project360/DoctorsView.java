@@ -6,6 +6,24 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import java.util.List;
+import java.util.ArrayList;
+import javafx.scene.control.ScrollPane;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.VBox;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DoctorsView {
 
@@ -27,26 +45,35 @@ public class DoctorsView {
         primaryStage.show();
     }
 
+
     private Scene createMainScene() {
         VBox navigation = new VBox(10); // Set spacing between elements in the VBox
         navigation.setPrefWidth(250);
         navigation.setPadding(new Insets(10));
 
-        Accordion healthHistoryAccordion = new Accordion();
-
+        // Label for username
         Label lblUsername = new Label("Username:");
-        TextField txtUsername = new TextField();
+
+        // Labels for health information
+        Label lblHealthHistory = new Label("Health History");
+        Label lblPreviousHealthIssues = new Label("Previous Health Issues:");
+        Label lblPreviouslyPrescribedMedications = new Label("Previously Prescribed Medications:");
+        Label lblHistoryOfImmunization = new Label("History of Immunization:");
+
+        // ScrollPanes to display health information
+        ScrollPane previousHealthIssuesScrollPane = new ScrollPane();
+        ScrollPane previouslyPrescribedMedicationsScrollPane = new ScrollPane();
+        ScrollPane historyOfImmunizationScrollPane = new ScrollPane();
+
+        // Buttons
         Button btnFetchUsername = new Button("Fetch Username");
-        TitledPane healthIssuesPane = new TitledPane("Previous Health Issues", createContentArea("Previous Health Issues:"));
-        TitledPane medicationsPane = new TitledPane("Previously Prescribed Medications", createContentArea("Previously Prescribed Medications:"));
-        TitledPane immunizationPane = new TitledPane("History of Immunization", createContentArea("History of Immunization:"));
-
-        healthHistoryAccordion.getPanes().addAll(healthIssuesPane, medicationsPane, immunizationPane);
-
         Button testFindingsButton = new Button("Add Test Findings");
         Button prescriptionNeededButton = new Button("Add Prescription Needed");
         Button messages = new Button("Messages");
-        Button logoutButton = new Button("Logout"); // Logout button
+        Button logoutButton = new Button("Logout");
+
+        // TextField for username input
+        TextField txtUsername = new TextField();
 
         // Adding extra space before the logout button
         Region spacer = new Region();
@@ -54,20 +81,36 @@ public class DoctorsView {
 
         StackPane contentArea = new StackPane();
 
-        testFindingsButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Test Findings:")));
-        prescriptionNeededButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Prescription Needed:")));
-        logoutButton.setOnAction(e -> mainApp.showLoginScreen()); // Set action for logout button
-        messages.setOnMouseClicked(event -> {
-            // This line instantiates your MessageApp
-            MessageApp messageApp = new MessageApp(username);
-            // Creates a new stage for the message application
-            Stage messageStage = new Stage();
-            // Starts the MessageApp using the new stage
-            messageApp.start(messageStage);
+        // Event handler for fetching username data
+        btnFetchUsername.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String username = txtUsername.getText().trim();
+                if (!username.isEmpty()) {
+                    // Fetch patient information from the database based on the username
+                    List<String> patientInfo = fetchPatientInfo(username);
+                    if (patientInfo.size() >= 3) {
+                        // Set the content of ScrollPanes with the fetched patient information
+                        previousHealthIssuesScrollPane.setContent(new Label(patientInfo.get(0)));
+                        previouslyPrescribedMedicationsScrollPane.setContent(new Label(patientInfo.get(1)));
+                        historyOfImmunizationScrollPane.setContent(new Label(patientInfo.get(2)));
+                    } else {
+                        showAlert(Alert.AlertType.ERROR, "Error", "Patient information not available.");
+                    }
+                } else {
+                    showAlert(Alert.AlertType.ERROR, "Error", "Please enter a username.");
+                }
+            }
         });
 
-        // Adding the spacer before the logout button
-        navigation.getChildren().addAll(lblUsername, txtUsername, btnFetchUsername, new TitledPane("Health History", healthHistoryAccordion), testFindingsButton, prescriptionNeededButton, messages, spacer, logoutButton);
+        // Adding elements to the VBox
+        navigation.getChildren().addAll(
+                lblUsername, txtUsername, btnFetchUsername,
+                lblHealthHistory, previousHealthIssuesScrollPane,
+                lblPreviousHealthIssues, previouslyPrescribedMedicationsScrollPane,
+                lblPreviouslyPrescribedMedications, historyOfImmunizationScrollPane,
+                lblHistoryOfImmunization, testFindingsButton,
+                prescriptionNeededButton, messages, spacer, logoutButton);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(navigation);
@@ -84,7 +127,59 @@ public class DoctorsView {
     }
 
 
-    private VBox createContentArea(String title) {
+
+    private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
+
+    // Method to fetch patient information from the database based on username
+    private List<String> fetchPatientInfo(String username) {
+        List<String> patientInfoList = new ArrayList<>(); // String to store the fetched patient information
+
+
+        try (Connection connection = DriverManager.getConnection(DB_URL)) {
+            // SQL query to fetch patient information based on username
+            // UPDATE patients SET PreviousHealthIssues = ?, PreviouslyPrescribedMedications = ?, ImmunizationHistory = ?, KnownAllergies = ?, HealthConcerns = ? WHERE username = ?";
+
+            String query = "SELECT PreviousHealthIssues, PreviouslyPrescribedMedications, ImmunizationHistory FROM patients WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, username);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                // Extract health issues, medications, and immunization from the result set
+                String healthIssues = resultSet.getString("PreviousHealthIssues");
+                String medications = resultSet.getString("PreviouslyPrescribedMedications");
+                String immunization = resultSet.getString("ImmunizationHistory");
+
+                // Construct patient information string
+                patientInfoList.add(healthIssues);
+                patientInfoList.add(medications);
+                patientInfoList.add(immunization);
+
+            } else {
+                // No patient found with the given username
+                patientInfoList.add("No patient found with the username: "+username);
+                patientInfoList.add("No patient found with the username: "+username);
+                patientInfoList.add("No patient found with the username: "+username);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Error occurred while fetching patient information
+            System.out.println(e);
+        }
+
+        return patientInfoList;
+    }
+
+    // Method to show an alert
+    private void showAlert(Alert.AlertType type, String title, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private VBox createContentArea(String title,String text) {
         Label label = new Label(title);
         TextArea textArea = new TextArea();
         textArea.setPrefSize(PREF_WIDTH, PREF_HEIGHT);
@@ -93,8 +188,8 @@ public class DoctorsView {
         return box;
     }
 
-    private VBox createContentAreaWithButtons(String title) {
-        VBox box = createContentArea(title);
+    private VBox createContentAreaWithButtons(String title,String text) {
+        VBox box = createContentArea(title,text);
         Button btnSave = new Button("Save");
         Button btnCancel = new Button("Cancel");
 
