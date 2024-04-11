@@ -1,9 +1,7 @@
 package office.project360;
 
-import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.Priority;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,19 +11,17 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class Patientview extends Application {
+public class PatientView {
 
-    private Stage primaryStage;
-    private BorderPane borderPane;
+    private BorderPane borderPane = new BorderPane();
     private VBox sidebar;
 
-    @Override
-    public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    public void show(Stage primaryStage) {
 
         // Initialize sidebar
         initSidebar();
@@ -197,7 +193,4 @@ public class Patientview extends Application {
         return button;
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 }

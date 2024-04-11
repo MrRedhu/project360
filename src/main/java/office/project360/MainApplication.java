@@ -31,6 +31,10 @@ public class MainApplication extends Application {
                 NursePortal nursePortal = new NursePortal();
                 nursePortal.show(primaryStage); // Use the same stage for the nurse dashboard
                 break;
+            case "Patient":
+                PatientView patientView = new PatientView();
+                patientView.show(primaryStage); // Show the patient dashboard
+                break;
             default:
                 System.out.println("Role not recognized.");
                 break;
