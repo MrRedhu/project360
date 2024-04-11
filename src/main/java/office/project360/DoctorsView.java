@@ -1,19 +1,18 @@
 package office.project360;
-import javafx.application.Application;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class DoctorsView extends Application {
+public class DoctorsView {
 
     private static final double PREF_WIDTH = 300.0;
     private static final double PREF_HEIGHT = 150.0;
 
-    @Override
-    public void start(Stage primaryStage) {
-        primaryStage.setTitle("Patient Information System");
+    public void show(Stage primaryStage) {
+        primaryStage.setTitle("Doctor's Dashboard");
         primaryStage.setScene(createMainScene());
         primaryStage.show();
     }
@@ -75,9 +74,5 @@ public class DoctorsView extends Application {
     private void saveInformation(String text, String category) {
         System.out.println("Information saved for " + category + ": " + text);
         // TODO: Replace the above line with actual save functionality
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }

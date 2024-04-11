@@ -21,12 +21,20 @@ public class MainApplication extends Application {
         primaryStage.show();
     }
 
-    public void userLoggedIn() {
-        // Here you would switch to another scene after successful login,
-        // For example, show the main dashboard of your application.
-        // Dashboard dashboard = new Dashboard(this);
-        // primaryStage.setScene(dashboard.getScene());
+    public void userLoggedIn(String role) {
+        switch (role) {
+            case "Doctor":
+                DoctorsView doctorsView = new DoctorsView();
+                doctorsView.show(primaryStage); // Use the same stage to show the doctor's dashboard
+                break;
+            // Add cases for other roles like "Patient", "Nurse" as needed
+            default:
+                System.out.println("Role not recognized.");
+                break;
+        }
     }
+
+
 
     public static void main(String[] args) {
         launch(args);
