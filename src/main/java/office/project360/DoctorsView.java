@@ -3,6 +3,8 @@ package office.project360;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -56,6 +58,16 @@ public class DoctorsView {
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(navigation);
         borderPane.setCenter(contentArea);
+
+        Image forkEm = new Image("file:src/main/resources/office/project360/Image_Fork'em.png");
+        BackgroundImage bgImg = new BackgroundImage(forkEm,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, true, true));
+//        ImageView imageView = new ImageView(forkEm);
+//        imageView.fitWidthProperty().bind(primaryStage.widthProperty());
+//        imageView.fitHeightProperty().bind(primaryStage.heightProperty());
+        borderPane.setBackground(new Background(bgImg));
 
         return new Scene(borderPane, 800, 600);
     }
