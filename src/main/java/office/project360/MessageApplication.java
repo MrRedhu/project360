@@ -2,17 +2,24 @@ package office.project360;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import java.sql.*;
 
 public class MessageApplication extends Application {
 
@@ -21,14 +28,23 @@ public class MessageApplication extends Application {
     private static final String USERNAME = "your_username";
     private static final String PASSWORD = "your_password";
 
-    private void sendMessage(int senderId, int receiverId, String subject, String messageText) {
+    private TextField senderUsernameField;
+    private TextField receiverUsernameField;
+
+    private void sendMessage(String senderUsername, String receiverUsername, String subject, String messageText) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
-            String sql = "INSERT INTO Messages (SenderID, ReceiverID, MessageText, Subject) VALUES (?, ?, ?, ?)";
+            // Check if receiver username exists in the users table
+            if (!isValidReceiverUsername(connection, receiverUsername)) {
+                showAlert(Alert.AlertType.ERROR, "Invalid Receiver Username", "The receiver username does not exist.");
+                return;
+            }
+
+            String sql = "INSERT INTO Messages (SenderUsername, ReceiverUsername, Subject, MessageText) VALUES (?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setInt(1, senderId);
-                statement.setInt(2, receiverId);
-                statement.setString(3, messageText);
-                statement.setString(4, subject);
+                statement.setString(1, senderUsername);
+                statement.setString(2, receiverUsername);
+                statement.setString(3, subject);
+                statement.setString(4, messageText);
                 statement.executeUpdate();
             }
             showAlert(Alert.AlertType.INFORMATION, "Message Sent", "Message sent successfully.");
@@ -37,68 +53,65 @@ public class MessageApplication extends Application {
         }
     }
 
+    private boolean isValidReceiverUsername(Connection connection, String receiverUsername) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM Users WHERE Username = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, receiverUsername);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    return count > 0;
+                }
+            }
+        }
+        return false;
+    }
+
     @Override
     public void start(Stage primaryStage) {
         // Create UI components
-        Label senderIdLabel = new Label("Sender ID:");
-        TextField senderIdField = new TextField();
+        Label senderUsernameLabel = new Label("Sender Username:");
+        senderUsernameField = new TextField();
 
-        Label receiverIdLabel = new Label("Receiver ID:");
-        TextField receiverIdField = new TextField();
+        Label receiverUsernameLabel = new Label("Receiver Username:");
+        receiverUsernameField = new TextField();
 
         Label subjectLabel = new Label("Subject:");
         TextField subjectField = new TextField();
 
         Label messageLabel = new Label("Message:");
         TextArea messageArea = new TextArea();
-        messageArea.setWrapText(true); // Enable text wrapping for long messages
-        messageArea.setPrefRowCount(10); // Set preferred row count for message area
+        messageArea.setWrapText(true);
+        messageArea.setPrefRowCount(10);
 
         Button sendButton = new Button("Send");
-
-        // Set event handler for send button
         sendButton.setOnAction(e -> {
-            try {
-                int senderId = Integer.parseInt(senderIdField.getText());
-                int receiverId = Integer.parseInt(receiverIdField.getText());
-                String subject = subjectField.getText();
-                String messageText = messageArea.getText();
+            String senderUsername = senderUsernameField.getText();
+            String receiverUsername = receiverUsernameField.getText();
+            String subject = subjectField.getText();
+            String messageText = messageArea.getText();
 
-                // Check if receiverId is valid (exists in the database)
-                // If not valid, show an error message
-                if (!isValidReceiverId(receiverId)) {
-                    showAlert(Alert.AlertType.ERROR, "Invalid Receiver ID", "The receiver ID is not valid.");
-                    return;
-                }
-
-                // Send the message
-                sendMessage(senderId, receiverId, subject, messageText);
-            } catch (NumberFormatException ex) {
-                showAlert(Alert.AlertType.ERROR, "Invalid ID", "Please enter valid numeric IDs.");
+            if (senderUsername.isEmpty() || receiverUsername.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Please enter both sender and receiver usernames.");
+                return;
             }
+
+            sendMessage(senderUsername, receiverUsername, subject, messageText);
         });
 
-        // Create layout
         VBox root = new VBox(10);
         root.getChildren().addAll(
-                senderIdLabel, senderIdField,
-                receiverIdLabel, receiverIdField,
+                senderUsernameLabel, senderUsernameField,
+                receiverUsernameLabel, receiverUsernameField,
                 subjectLabel, subjectField,
                 messageLabel, messageArea,
                 sendButton
         );
 
-        // Set scene
         Scene scene = new Scene(root, 400, 400);
         primaryStage.setScene(scene);
         primaryStage.setTitle("Messaging App");
         primaryStage.show();
-    }
-
-    private boolean isValidReceiverId(int receiverId) {
-        // Implement validation logic to check if the receiverId is valid
-        // You can query the database to check if the ID exists
-        return true; // Placeholder for demonstration
     }
 
     private void showAlert(Alert.AlertType type, String title, String content) {
