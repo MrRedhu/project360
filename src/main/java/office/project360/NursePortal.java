@@ -32,6 +32,7 @@ import javafx.scene.control.Alert.AlertType;
 public class NursePortal {
 
     private BorderPane borderPane = new BorderPane();
+    private String currentUser = "";
 
     public void show(Stage primaryStage) {
         VBox menuBox = setupMenuBox();
@@ -91,14 +92,7 @@ public class NursePortal {
         lblProfile.setOnMouseClicked(event -> borderPane.setCenter(createProfileContent()));
         lblPatientVitals.setOnMouseClicked(event -> borderPane.setCenter(createPatientVitalsContent()));
         lblHealthHistory.setOnMouseClicked(event -> borderPane.setCenter(createHealthHistoryContent()));
-        lblMessages.setOnMouseClicked(event -> {
-            // This line instantiates your MessageApp
-            MessageApp messageApp = new MessageApp();
-            // Creates a new stage for the message application
-            Stage messageStage = new Stage();
-            // Starts the MessageApp using the new stage
-            messageApp.start(messageStage);
-        });
+        lblMessages.setOnMouseClicked(event -> borderPane.setCenter(createMessagesContent()));
 //        lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(createInsuranceCardContent()));
 //        Implement createInsuranceCardContent() or similar methods for handling clicks on other labels
 
@@ -134,17 +128,19 @@ public class NursePortal {
         lblFirstName.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblFirstName, 0, 1);
 
-        // TextField for displaying patient's first name
-        TextField txtFirstName = new TextField();
-        grid.add(txtFirstName, 1, 1);
+        // Label for displaying patient's first name
+        Label lblFirstNameValue = new Label();
+        lblFirstNameValue.setStyle("-fx-text-fill: black;");
+        grid.add(lblFirstNameValue, 1, 1);
 
         Label lblLastName = new Label("Last Name:");
         lblLastName.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblLastName, 0, 2);
 
-        // TextField for displaying patient's last name
-        TextField txtLastName = new TextField();
-        grid.add(txtLastName, 1, 2);
+        // Label for displaying patient's last name
+        Label lblLastNameValue = new Label();
+        lblLastNameValue.setStyle("-fx-text-fill: black;");
+        grid.add(lblLastNameValue, 1, 2);
 
         Label lblDateOfBirth = new Label("Date of Birth:");
         lblDateOfBirth.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
@@ -169,6 +165,18 @@ public class NursePortal {
         grid.add(btnSave, 1, 6);
         grid.add(btnCancel, 2, 6);
 
+        btnCancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                txtUsername.setText("");
+                lblFirstNameValue.setText("");
+                lblLastNameValue.setText("");
+                txtDateOfBirth.setText("");
+                txtEmail.setText("");
+                txtPhoneNumber.setText("");
+            }
+        });
+
         // Event handler for Save button
         btnSave.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -181,8 +189,8 @@ public class NursePortal {
                     updatePatientInfo(username, dateOfBirth, email, phoneNumber);
                     // Reset all fields
                     txtUsername.setText("");
-                    txtFirstName.setText("");
-                    txtLastName.setText("");
+                    lblFirstNameValue.setText("");
+                    lblLastNameValue.setText("");
                     txtDateOfBirth.setText("");
                     txtEmail.setText("");
                     txtPhoneNumber.setText("");
@@ -203,14 +211,49 @@ public class NursePortal {
                 if (!username.isEmpty()) {
                     String[] names = fetchPatientName(username);
                     if (names != null && names.length == 2) {
-                        txtFirstName.setText(names[0]);
-                        txtLastName.setText(names[1]);
+                        lblFirstNameValue.setText(names[0]);
+                        lblLastNameValue.setText(names[1]);
                     }
                 }
             }
         });
 
-        // Handle Save and Cancel button actions here
+        btnCancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                txtUsername.setText("");
+                lblFirstNameValue.setText("");
+                lblLastNameValue.setText("");
+                txtDateOfBirth.setText("");
+                txtEmail.setText("");
+                txtPhoneNumber.setText("");
+            }
+        });
+
+        btnSave.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String username = txtUsername.getText().trim();
+                String dateOfBirth = txtDateOfBirth.getText().trim();
+                String email = txtEmail.getText().trim();
+                String phoneNumber = txtPhoneNumber.getText().trim();
+                if (!username.isEmpty() && !dateOfBirth.isEmpty() && !email.isEmpty() && !phoneNumber.isEmpty()) {
+                    updatePatientInfo(username, dateOfBirth, email, phoneNumber);
+                    // Reset all fields
+                    txtUsername.setText("");
+                    lblFirstNameValue.setText("");
+                    lblLastNameValue.setText("");
+                    txtDateOfBirth.setText("");
+                    txtEmail.setText("");
+                    txtPhoneNumber.setText("");
+                    // Show success alert
+                    showAlert(AlertType.INFORMATION, "Success", "Information updated successfully.");
+                } else {
+                    // Handle empty fields error
+                    showAlert(AlertType.ERROR, "Error", "Please fill in all fields.");
+                }
+            }
+        });
 
         return grid;
     }
@@ -218,6 +261,7 @@ public class NursePortal {
     // Method to fetch patient's name from the database based on username
     private String[] fetchPatientName(String username) {
         String[] names = new String[2];
+        currentUser = username;
 
         try (Connection connection = DriverManager.getConnection(DB_URL)) {
             String query = "SELECT FirstName, LastName FROM patients WHERE username = ?";
@@ -272,43 +316,115 @@ public class NursePortal {
         grid.setAlignment(Pos.TOP_CENTER);
 
         Label lblWeight = new Label("Weight:");
-        lblWeight.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblWeight.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblWeight, 0, 0);
-        grid.add(new TextField(), 1, 0);
+        TextField txtWeight = new TextField();
+        grid.add(txtWeight, 1, 0);
 
         Label lblHeight = new Label("Height:");
-        lblHeight.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblHeight.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblHeight, 0, 1);
-        grid.add(new TextField(), 1, 1);
+        TextField txtHeight = new TextField();
+        grid.add(txtHeight, 1, 1);
 
         Label lblBodyTemperature = new Label("Body Temperature:");
-        lblBodyTemperature.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblBodyTemperature.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblBodyTemperature, 0, 2);
-        grid.add(new TextField(), 1, 2);
+        TextField txtBodyTemperature = new TextField();
+        grid.add(txtBodyTemperature, 1, 2);
 
         Label lblBloodPressure = new Label("Blood Pressure:");
-        lblBloodPressure.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblBloodPressure.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblBloodPressure, 0, 3);
-        grid.add(new TextField(), 1, 3);
+        TextField txtBloodPressure = new TextField();
+        grid.add(txtBloodPressure, 1, 3);
 
         Label lblPatientAge = new Label("Patient Age:");
-        lblPatientAge.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblPatientAge.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblPatientAge, 0, 4);
-        grid.add(new TextField(), 1, 4);
+        TextField txtPatientAge = new TextField();
+        grid.add(txtPatientAge, 1, 4);
 
         Button btnSubmitVitals = new Button("Submit Vitals");
         grid.add(btnSubmitVitals, 1, 5);
-        GridPane.setHalignment(btnSubmitVitals, HPos.RIGHT);
+        GridPane.setHalignment(btnSubmitVitals, javafx.geometry.HPos.RIGHT);
+
+
 
         // Event handling for the submit button
-        btnSubmitVitals.setOnAction(event -> {
-            // Logic to handle submission of vitals
+        btnSubmitVitals.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String weightStr = txtWeight.getText().trim();
+                String heightStr = txtHeight.getText().trim();
+                String bodyTemperatureStr = txtBodyTemperature.getText().trim();
+                String bloodPressureStr = txtBloodPressure.getText().trim();
+                String patientAge = txtPatientAge.getText().trim();
+
+                // Check if any field is empty
+                if (weightStr.isEmpty() || heightStr.isEmpty() || bodyTemperatureStr.isEmpty() || bloodPressureStr.isEmpty()) {
+                    showAlert(AlertType.ERROR, "Error", "Please fill in all fields.");
+                    return;
+                }
+
+                try {
+                    // Convert strings to double
+                    double weight = Double.parseDouble(weightStr);
+                    double height = Double.parseDouble(heightStr);
+                    double bodyTemperature = Double.parseDouble(bodyTemperatureStr);
+                    int age = Integer.parseInt(patientAge);
+                    // Update patient table with vitals
+                    updatePatientVitals(weight, height, bodyTemperature, bloodPressureStr,age);
+
+                    // Clear all fields
+                    txtWeight.clear();
+                    txtHeight.clear();
+                    txtBodyTemperature.clear();
+                    txtBloodPressure.clear();
+                    txtPatientAge.clear();
+
+                    // Show success alert
+                    showAlert(AlertType.INFORMATION, "Success", "Vitals submitted successfully.");
+                } catch (NumberFormatException e) {
+                    // Handle invalid input format
+                    showAlert(AlertType.ERROR, "Error", "Please enter valid numerical values for weight, height, and body temperature.");
+                }
+            }
         });
+
 
         return grid;
     }
 
+
+    // Method to update patient vitals in the database
+    private void updatePatientVitals(Double weight, Double height, Double bodyTemperature, String bloodPressure, int age) {
+        try (Connection connection = DriverManager.getConnection(DB_URL)) {
+            String query = "UPDATE patients SET Weight = ?, Height = ?, BodyTemperature = ?, BloodPressure = ?, Age = ? WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setDouble(1, weight);
+            preparedStatement.setDouble(2, height);
+            preparedStatement.setDouble(3, bodyTemperature);
+            preparedStatement.setString(4, bloodPressure);
+            preparedStatement.setInt(5, age);
+            // Assuming patient_id is the primary key of the patient table and is used for identification
+            preparedStatement.setString(6, currentUser);
+            System.out.println("currentUser");
+            System.out.println(currentUser);
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Vitals updated successfully.");
+            } else {
+                System.out.println("Failed to update vitals.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private GridPane createHealthHistoryContent() {
+
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
@@ -316,58 +432,183 @@ public class NursePortal {
         grid.setAlignment(Pos.TOP_CENTER);
 
         Label lblMedicalHistory = new Label("Patient's Medical History");
-        lblMedicalHistory.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblMedicalHistory.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblMedicalHistory, 0, 0, 2, 1);
 
         Label lblPreviousHealthIssues = new Label("Previous Health Issues");
-        lblPreviousHealthIssues.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblPreviousHealthIssues.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblPreviousHealthIssues, 0, 1);
-        grid.add(new TextField(), 0, 2);
+        TextField previousHealthIssuesField = new TextField();
+        grid.add(previousHealthIssuesField, 0, 2);
 
         Label lblPrescribedMedications = new Label("Previously Prescribed Medications");
-        lblPrescribedMedications.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblPrescribedMedications.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblPrescribedMedications, 0, 3);
-        grid.add(new TextField(), 0, 4);
+        TextField prescribedMedicationsField = new TextField();
+        grid.add(prescribedMedicationsField, 0, 4);
 
         Label lblImmunizationHistory = new Label("Immunization History");
-        lblImmunizationHistory.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblImmunizationHistory.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblImmunizationHistory, 0, 5);
-        grid.add(new TextField(), 0, 6);
+        TextField immunizationHistoryField = new TextField();
+        grid.add(immunizationHistoryField, 0, 6);
 
         Label lblKnownAllergies = new Label("Known Allergies");
-        lblKnownAllergies.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblKnownAllergies.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblKnownAllergies, 0, 7);
         TextField allergiesField = new TextField();
         grid.add(allergiesField, 0, 8);
-        Button btnAddAllergy = new Button("Add Allergy");
-        grid.add(btnAddAllergy, 1, 8);
 
         Label lblHealthConcerns = new Label("Health Concerns");
-        lblHealthConcerns.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        lblHealthConcerns.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
         grid.add(lblHealthConcerns, 0, 9);
         TextField healthConcernsField = new TextField();
         grid.add(healthConcernsField, 0, 10);
-        Button btnAddHealthConcern = new Button("Add Health Concern");
-        grid.add(btnAddHealthConcern, 1, 10);
 
         Button btnSave = new Button("Save Changes");
         Button btnCancel = new Button("Cancel");
         grid.add(btnSave, 0, 11);
         grid.add(btnCancel, 1, 11);
 
-        // Handle button actions here
-        btnAddAllergy.setOnAction(event -> {
-            // Code to handle adding a new allergy
+        btnCancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Clear all fields
+                previousHealthIssuesField.clear();
+                prescribedMedicationsField.clear();
+                immunizationHistoryField.clear();
+                allergiesField.clear();
+                healthConcernsField.clear();
+            }
         });
 
-        btnAddHealthConcern.setOnAction(event -> {
-            // Code to handle adding a new health concern
+        // Event handling for the save button
+        btnSave.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // Get the values from the text fields
+                String previousHealthIssues = previousHealthIssuesField.getText().trim();
+                String prescribedMedications = prescribedMedicationsField.getText().trim();
+                String immunizationHistory = immunizationHistoryField.getText().trim();
+                String knownAllergies = allergiesField.getText().trim();
+                String healthConcerns = healthConcernsField.getText().trim();
+
+                // Check if any field is empty
+                if (previousHealthIssues.isEmpty() || prescribedMedications.isEmpty() || immunizationHistory.isEmpty() || knownAllergies.isEmpty() || healthConcerns.isEmpty()) {
+                    showAlert(AlertType.ERROR, "Error", "Please fill in all fields.");
+                    return;
+                }
+
+                // Update patient table with the values
+                updatePatientHealthHistory(previousHealthIssues, prescribedMedications, immunizationHistory, knownAllergies, healthConcerns);
+
+                // Clear all fields
+                previousHealthIssuesField.clear();
+                prescribedMedicationsField.clear();
+                immunizationHistoryField.clear();
+                allergiesField.clear();
+                healthConcernsField.clear();
+
+                // Show success alert
+                showAlert(AlertType.INFORMATION, "Success", "Health history updated successfully.");
+            }
         });
 
-        // Handle Save and Cancel button actions here
 
         return grid;
     }
 
+    private void updatePatientHealthHistory(String previousHealthIssues, String prescribedMedications, String immunizationHistory, String knownAllergies, String healthConcerns) {
+        try (Connection connection = DriverManager.getConnection(DB_URL)) {
+            String query = "UPDATE patients SET PreviousHealthIssues = ?, PreviouslyPrescribedMedications = ?, ImmunizationHistory = ?, KnownAllergies = ?, HealthConcerns = ? WHERE username = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, previousHealthIssues);
+            preparedStatement.setString(2, prescribedMedications);
+            preparedStatement.setString(3, immunizationHistory);
+            preparedStatement.setString(4, knownAllergies);
+            preparedStatement.setString(5, healthConcerns);
+            // Assuming patient_id is the primary key of the patient table and is used for identification
+            preparedStatement.setString(6, currentUser); // Replace patientId with the actual patient ID
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                System.out.println("Health history updated successfully.");
+            } else {
+                System.out.println("Failed to update health history.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static class Message {
+        private final String read;
+        private final String from;
+        private final String date;
+        private final String subject;
+
+        public Message(String read, String from, String date, String subject) {
+            this.read = read;
+            this.from = from;
+            this.date = date;
+            this.subject = subject;
+        }
+
+        // Getters (no setters for simplicity, assuming data is read-only for this example)
+        public String getRead() { return read; }
+        public String getFrom() { return from; }
+        public String getDate() { return date; }
+        public String getSubject() { return subject; }
+    }
+
+    private VBox createMessagesContent() {
+        VBox messagesBox = new VBox(10);
+        messagesBox.setPadding(new Insets(20));
+
+        // Table for displaying messages
+        TableView<Message> table = new TableView<>();
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Make columns take up all available space equally
+
+        // Define columns
+        TableColumn<Message, String> columnRead = new TableColumn<>("Read");
+        columnRead.setCellValueFactory(new PropertyValueFactory<>("read"));
+
+        TableColumn<Message, String> columnFrom = new TableColumn<>("From");
+        columnFrom.setCellValueFactory(new PropertyValueFactory<>("from"));
+
+        TableColumn<Message, String> columnDate = new TableColumn<>("Date");
+        columnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+
+        TableColumn<Message, String> columnSubject = new TableColumn<>("Subject");
+        columnSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
+
+        // Add columns to table
+        table.getColumns().addAll(columnRead, columnFrom, columnDate, columnSubject);
+
+        // Sample data for the table
+        ObservableList<Message> messages = FXCollections.observableArrayList(
+                new Message("✓", "ASU HEALTH SERVICES", "08/04/2024 16:36", "Test")
+                // ... Add more sample messages here
+        );
+
+        table.setItems(messages);
+
+        // Buttons for inbox functionality
+        Button btnNewMessage = new Button("New Message");
+        Button btnRefresh = new Button("Refresh");
+
+        // Event handling for the buttons
+        btnNewMessage.setOnAction(event -> {
+            // Handle new message action
+        });
+
+        btnRefresh.setOnAction(event -> {
+            // Handle refresh action
+        });
+
+        // Assemble the messages view
+        messagesBox.getChildren().addAll(btnNewMessage, btnRefresh, table);
+
+        return messagesBox;
+    }
 
     }
