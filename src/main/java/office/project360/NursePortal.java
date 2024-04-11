@@ -7,9 +7,12 @@ import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class NursePortal {
@@ -18,14 +21,48 @@ public class NursePortal {
 
     public void show(Stage primaryStage) {
         VBox menuBox = setupMenuBox();
+        HBox buttonsBox = setupButtonsBox();
+        borderPane.setBottom(buttonsBox);
         borderPane.setLeft(menuBox);
 
         // Initially set the profile content
         borderPane.setCenter(createProfileContent());
 
+        Image forkEm = new Image("file:src/main/resources/office/project360/Image_Fork'em.png");
+        BackgroundImage bgImg = new BackgroundImage(forkEm,
+                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, true, true));
+        ImageView imageView = new ImageView(forkEm);
+        imageView.fitWidthProperty().bind(primaryStage.widthProperty());
+        imageView.fitHeightProperty().bind(primaryStage.heightProperty());
+        borderPane.setBackground(new Background(bgImg));
+
+        Color backgroundColor = Color.web("#32051e");
+        BackgroundFill backgroundFill = new BackgroundFill(backgroundColor, CornerRadii.EMPTY, Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        menuBox.setBackground(background);
+        buttonsBox.setBackground(background);
+
         Scene scene = new Scene(borderPane, 800, 600);
         primaryStage.setTitle("Nurse Dashboard");
         primaryStage.setScene(scene);
+    }
+
+    private HBox setupButtonsBox() {
+        HBox buttonsBox = new HBox(13);
+        buttonsBox.setPadding(new Insets(20));
+        buttonsBox.setAlignment(Pos.CENTER);
+        Button btnBack = new Button("Back");
+        Button btnLogOut = new Button("Log Out");
+
+        btnBack.setOnMouseEntered(e-> btnBack.setCursor(Cursor.HAND));
+        btnBack.setOnMouseExited(e -> btnBack.setCursor(Cursor.DEFAULT));
+        btnLogOut.setOnMouseEntered(e-> btnLogOut.setCursor(Cursor.HAND));
+        btnLogOut.setOnMouseExited(e -> btnLogOut.setCursor(Cursor.DEFAULT));
+
+        buttonsBox.getChildren().addAll(btnBack, btnLogOut);
+        return buttonsBox;
     }
 
     private VBox setupMenuBox() {
@@ -41,18 +78,17 @@ public class NursePortal {
         lblPatientVitals.setOnMouseClicked(event -> borderPane.setCenter(createPatientVitalsContent()));
         lblHealthHistory.setOnMouseClicked(event -> borderPane.setCenter(createHealthHistoryContent()));
         lblMessages.setOnMouseClicked(event -> borderPane.setCenter(createMessagesContent()));
-        // lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(createInsuranceCardContent()));
-        // Implement createInsuranceCardContent() or similar methods for handling clicks on other labels
+//        lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(createInsuranceCardContent()));
+//        Implement createInsuranceCardContent() or similar methods for handling clicks on other labels
 
         for (Label label : new Label[]{lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard}) {
             label.setCursor(Cursor.HAND);
-            label.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
+            label.setStyle("-fx-text-fill: white; -fx-font-weight: bold;");
         }
 
         menuBox.getChildren().addAll(lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard);
         return menuBox;
     }
-
 
     private GridPane createProfileContent() {
         GridPane grid = new GridPane();
@@ -61,15 +97,29 @@ public class NursePortal {
         grid.setPadding(new Insets(20));
         grid.setAlignment(Pos.TOP_CENTER);
 
-        grid.add(new Label("Username:"), 0, 0);
+        Label lblUsername = new Label("Username:");
+        lblUsername.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
+        grid.add(lblUsername, 0, 0);
         grid.add(new TextField(), 1, 0);
-        grid.add(new Label("Name:"), 0, 1);
+
+        Label lblName = new Label("Name:");
+        lblName.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
+        grid.add(lblName, 0, 1);
         grid.add(new TextField(), 1, 1);
-        grid.add(new Label("Date of Birth:"), 0, 2);
+
+        Label lblDateOfBirth = new Label("Date of Birth:");
+        lblDateOfBirth.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
+        grid.add(lblDateOfBirth, 0, 2);
         grid.add(new TextField(), 1, 2);
-        grid.add(new Label("Email:"), 0, 3);
+
+        Label lblEmail = new Label("Email:");
+        lblEmail.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
+        grid.add(lblEmail, 0, 3);
         grid.add(new TextField(), 1, 3);
-        grid.add(new Label("Phone Number:"), 0, 4);
+
+        Label lblPhoneNumber = new Label("Phone Number:");
+        lblPhoneNumber.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Set the text color to #858585
+        grid.add(lblPhoneNumber, 0, 4);
         grid.add(new TextField(), 1, 4);
 
         Button btnSave = new Button("Save");
@@ -89,19 +139,29 @@ public class NursePortal {
         grid.setPadding(new Insets(20));
         grid.setAlignment(Pos.TOP_CENTER);
 
-        grid.add(new Label("Weight:"), 0, 0);
+        Label lblWeight = new Label("Weight:");
+        lblWeight.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblWeight, 0, 0);
         grid.add(new TextField(), 1, 0);
 
-        grid.add(new Label("Height:"), 0, 1);
+        Label lblHeight = new Label("Height:");
+        lblHeight.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblHeight, 0, 1);
         grid.add(new TextField(), 1, 1);
 
-        grid.add(new Label("Body Temperature:"), 0, 2);
+        Label lblBodyTemperature = new Label("Body Temperature:");
+        lblBodyTemperature.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblBodyTemperature, 0, 2);
         grid.add(new TextField(), 1, 2);
 
-        grid.add(new Label("Blood Pressure:"), 0, 3);
+        Label lblBloodPressure = new Label("Blood Pressure:");
+        lblBloodPressure.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblBloodPressure, 0, 3);
         grid.add(new TextField(), 1, 3);
 
-        grid.add(new Label("Patient Age:"), 0, 4);
+        Label lblPatientAge = new Label("Patient Age:");
+        lblPatientAge.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblPatientAge, 0, 4);
         grid.add(new TextField(), 1, 4);
 
         Button btnSubmitVitals = new Button("Submit Vitals");
@@ -123,24 +183,36 @@ public class NursePortal {
         grid.setPadding(new Insets(20));
         grid.setAlignment(Pos.TOP_CENTER);
 
-        grid.add(new Label("Patient's Medical History"), 0, 0, 2, 1);
+        Label lblMedicalHistory = new Label("Patient's Medical History");
+        lblMedicalHistory.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblMedicalHistory, 0, 0, 2, 1);
 
-        grid.add(new Label("Previous Health Issues"), 0, 1);
+        Label lblPreviousHealthIssues = new Label("Previous Health Issues");
+        lblPreviousHealthIssues.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblPreviousHealthIssues, 0, 1);
         grid.add(new TextField(), 0, 2);
 
-        grid.add(new Label("Previously Prescribed Medications"), 0, 3);
+        Label lblPrescribedMedications = new Label("Previously Prescribed Medications");
+        lblPrescribedMedications.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblPrescribedMedications, 0, 3);
         grid.add(new TextField(), 0, 4);
 
-        grid.add(new Label("Immunization History"), 0, 5);
+        Label lblImmunizationHistory = new Label("Immunization History");
+        lblImmunizationHistory.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblImmunizationHistory, 0, 5);
         grid.add(new TextField(), 0, 6);
 
-        grid.add(new Label("Known Allergies"), 0, 7);
+        Label lblKnownAllergies = new Label("Known Allergies");
+        lblKnownAllergies.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblKnownAllergies, 0, 7);
         TextField allergiesField = new TextField();
         grid.add(allergiesField, 0, 8);
         Button btnAddAllergy = new Button("Add Allergy");
         grid.add(btnAddAllergy, 1, 8);
 
-        grid.add(new Label("Health Concerns"), 0, 9);
+        Label lblHealthConcerns = new Label("Health Concerns");
+        lblHealthConcerns.setStyle("-fx-text-fill: black; -fx-font-weight: bold;"); // Make text black and bold
+        grid.add(lblHealthConcerns, 0, 9);
         TextField healthConcernsField = new TextField();
         grid.add(healthConcernsField, 0, 10);
         Button btnAddHealthConcern = new Button("Add Health Concern");
@@ -152,7 +224,6 @@ public class NursePortal {
         grid.add(btnCancel, 1, 11);
 
         // Handle button actions here
-        // For example, to add a new allergy to a list or similar
         btnAddAllergy.setOnAction(event -> {
             // Code to handle adding a new allergy
         });
