@@ -92,7 +92,14 @@ public class NursePortal {
         lblProfile.setOnMouseClicked(event -> borderPane.setCenter(createProfileContent()));
         lblPatientVitals.setOnMouseClicked(event -> borderPane.setCenter(createPatientVitalsContent()));
         lblHealthHistory.setOnMouseClicked(event -> borderPane.setCenter(createHealthHistoryContent()));
-        lblMessages.setOnMouseClicked(event -> borderPane.setCenter(createMessagesContent()));
+        lblMessages.setOnMouseClicked(event -> {
+            // This line instantiates your MessageApp
+            MessageApp messageApp = new MessageApp();
+            // Creates a new stage for the message application
+            Stage messageStage = new Stage();
+            // Starts the MessageApp using the new stage
+            messageApp.start(messageStage);
+        });
 //        lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(createInsuranceCardContent()));
 //        Implement createInsuranceCardContent() or similar methods for handling clicks on other labels
 
@@ -540,75 +547,6 @@ public class NursePortal {
         }
     }
 
-    public static class Message {
-        private final String read;
-        private final String from;
-        private final String date;
-        private final String subject;
 
-        public Message(String read, String from, String date, String subject) {
-            this.read = read;
-            this.from = from;
-            this.date = date;
-            this.subject = subject;
-        }
 
-        // Getters (no setters for simplicity, assuming data is read-only for this example)
-        public String getRead() { return read; }
-        public String getFrom() { return from; }
-        public String getDate() { return date; }
-        public String getSubject() { return subject; }
-    }
-
-    private VBox createMessagesContent() {
-        VBox messagesBox = new VBox(10);
-        messagesBox.setPadding(new Insets(20));
-
-        // Table for displaying messages
-        TableView<Message> table = new TableView<>();
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY); // Make columns take up all available space equally
-
-        // Define columns
-        TableColumn<Message, String> columnRead = new TableColumn<>("Read");
-        columnRead.setCellValueFactory(new PropertyValueFactory<>("read"));
-
-        TableColumn<Message, String> columnFrom = new TableColumn<>("From");
-        columnFrom.setCellValueFactory(new PropertyValueFactory<>("from"));
-
-        TableColumn<Message, String> columnDate = new TableColumn<>("Date");
-        columnDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-
-        TableColumn<Message, String> columnSubject = new TableColumn<>("Subject");
-        columnSubject.setCellValueFactory(new PropertyValueFactory<>("subject"));
-
-        // Add columns to table
-        table.getColumns().addAll(columnRead, columnFrom, columnDate, columnSubject);
-
-        // Sample data for the table
-        ObservableList<Message> messages = FXCollections.observableArrayList(
-                new Message("✓", "ASU HEALTH SERVICES", "08/04/2024 16:36", "Test")
-                // ... Add more sample messages here
-        );
-
-        table.setItems(messages);
-
-        // Buttons for inbox functionality
-        Button btnNewMessage = new Button("New Message");
-        Button btnRefresh = new Button("Refresh");
-
-        // Event handling for the buttons
-        btnNewMessage.setOnAction(event -> {
-            // Handle new message action
-        });
-
-        btnRefresh.setOnAction(event -> {
-            // Handle refresh action
-        });
-
-        // Assemble the messages view
-        messagesBox.getChildren().addAll(btnNewMessage, btnRefresh, table);
-
-        return messagesBox;
-    }
-
-    }
+}
