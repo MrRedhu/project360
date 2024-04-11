@@ -69,7 +69,7 @@ public class PatientView {
         borderPane.setBottom(buttonBox);
 
         // Load the image
-        Image image = new Image("file:///Users/soohumkaushik/IdeaProjects/project360/src/main/resources/office/project360/test.png");
+        Image image = new Image(getClass().getResourceAsStream("/office/project360/test.png"));
 
         // Create an ImageView for the image
         ImageView imageView = new ImageView(image);
@@ -84,7 +84,7 @@ public class PatientView {
         Scene scene = new Scene(borderPane, 1054, 768);
 
         // Add CSS file to the scene's stylesheets
-        scene.getStylesheets().add("file:/Users/soohumkaushik/IdeaProjects/project360/src/main/resources/office/project360/patientview.css");
+        scene.getStylesheets().add(getClass().getResource("/office/project360/patientview.css").toExternalForm());
 
         primaryStage.setScene(scene);
         primaryStage.setTitle("Patient View Page");
