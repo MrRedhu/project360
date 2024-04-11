@@ -27,7 +27,10 @@ public class MainApplication extends Application {
                 DoctorsView doctorsView = new DoctorsView();
                 doctorsView.show(primaryStage); // Use the same stage to show the doctor's dashboard
                 break;
-            // Add cases for other roles like "Patient", "Nurse" as needed
+            case "Nurse":
+                NursePortal nursePortal = new NursePortal();
+                nursePortal.show(primaryStage); // Use the same stage for the nurse dashboard
+                break;
             default:
                 System.out.println("Role not recognized.");
                 break;

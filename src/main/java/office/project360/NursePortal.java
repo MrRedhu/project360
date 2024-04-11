@@ -1,32 +1,58 @@
 package office.project360;
 
-import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class NursePortal extends Application {
+public class NursePortal {
+
+    private BorderPane borderPane = new BorderPane();
+
+    public void show(Stage primaryStage) {
+        VBox menuBox = setupMenuBox();
+        borderPane.setLeft(menuBox);
+
+        // Initially set the profile content
+        borderPane.setCenter(createProfileContent());
+
+        Scene scene = new Scene(borderPane, 800, 600);
+        primaryStage.setTitle("Nurse Dashboard");
+        primaryStage.setScene(scene);
+    }
+
+    private VBox setupMenuBox() {
+        VBox menuBox = new VBox(10);
+        menuBox.setPadding(new Insets(20));
+        Label lblProfile = new Label("Profile");
+        Label lblPatientVitals = new Label("Patient's Vitals");
+        Label lblHealthHistory = new Label("Health History");
+        Label lblMessages = new Label("Messages");
+        Label lblInsuranceCard = new Label("Insurance Card");
+
+        lblProfile.setOnMouseClicked(event -> borderPane.setCenter(createProfileContent()));
+        lblPatientVitals.setOnMouseClicked(event -> borderPane.setCenter(createPatientVitalsContent()));
+        lblHealthHistory.setOnMouseClicked(event -> borderPane.setCenter(createHealthHistoryContent()));
+        lblMessages.setOnMouseClicked(event -> borderPane.setCenter(createMessagesContent()));
+        // lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(createInsuranceCardContent()));
+        // Implement createInsuranceCardContent() or similar methods for handling clicks on other labels
+
+        for (Label label : new Label[]{lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard}) {
+            label.setCursor(Cursor.HAND);
+            label.setStyle("-fx-text-fill: black; -fx-font-weight: bold;");
+        }
+
+        menuBox.getChildren().addAll(lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard);
+        return menuBox;
+    }
+
 
     private GridPane createProfileContent() {
         GridPane grid = new GridPane();
@@ -211,91 +237,4 @@ public class NursePortal extends Application {
         return messagesBox;
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        BorderPane borderPane = new BorderPane();
-        Image forkEm = new Image("file:src/main/resources/office/project360/Image_Fork'em.png");
-        BackgroundImage bgImg = new BackgroundImage(forkEm, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT);
-        ImageView imageView = new ImageView(forkEm);
-        imageView.setOpacity(0.5);
-        borderPane.setBackground(new Background(bgImg));
-
-        // Menu on the left side
-        VBox menuBox = new VBox(10);
-        HBox buttonsBox = new HBox(10);
-        buttonsBox.setPadding(new Insets(20));
-        menuBox.setPadding(new Insets(20));
-        Label lblProfile = new Label("Profile");
-        Label lblPatientVitals = new Label("Patient's Vitals");
-        Label lblHealthHistory = new Label("Health History");
-        Label lblMessages = new Label("Messages");
-        Label lblInsuranceCard = new Label("Insurance Card");
-        Button btnBack = new Button("Back");
-        Button btnLogOut = new Button("Log Out");
-
-        HBox topBox = new HBox(0);
-        VBox rightBox = new VBox(0);
-        topBox.setPadding(new Insets(20));
-        rightBox.setPadding(new Insets(20));
-        Color backgroundColor = Color.web("#32051e");
-        BackgroundFill backgroundFill = new BackgroundFill(backgroundColor, CornerRadii.EMPTY, Insets.EMPTY);
-        Background background = new Background(backgroundFill);
-        menuBox.setBackground(background);
-        buttonsBox.setBackground(background);
-        topBox.setBackground(background);
-        rightBox.setBackground(background);
-
-        Label[] labels = {lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard};
-
-        for (Label label : labels) {
-            label.setOnMouseEntered(e -> label.setCursor(Cursor.HAND));
-            label.setOnMouseExited(e -> label.setCursor(Cursor.DEFAULT));
-            label.setStyle("-fx-text-fill: white;");
-        }
-
-        btnBack.setOnMouseEntered(e-> btnBack.setCursor(Cursor.HAND));
-        btnBack.setOnMouseExited(e -> btnBack.setCursor(Cursor.DEFAULT));
-
-        btnLogOut.setOnMouseEntered(e-> btnLogOut.setCursor(Cursor.HAND));
-        btnLogOut.setOnMouseExited(e -> btnLogOut.setCursor(Cursor.DEFAULT));
-
-        menuBox.getChildren().addAll(lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard);
-        buttonsBox.getChildren().addAll(btnBack, btnLogOut);
-
-        buttonsBox.setAlignment(Pos.CENTER);
-        HBox.setHgrow(buttonsBox, Priority.ALWAYS);
-
-        // Content on the right side
-        GridPane contentPane = new GridPane();
-        contentPane.setPadding(new Insets(20));
-        contentPane.setHgap(10);
-        contentPane.setVgap(10);
-
-        // Set actions for buttons
-        lblProfile.setOnMouseClicked(event -> borderPane.setCenter(createProfileContent()));
-        lblPatientVitals.setOnMouseClicked(event -> borderPane.setCenter(createPatientVitalsContent()));
-        lblHealthHistory.setOnMouseClicked(event -> borderPane.setCenter(createHealthHistoryContent()));
-        lblMessages.setOnMouseClicked(event -> borderPane.setCenter(createMessagesContent()));
-        lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(new TextField("Insurance Card Content")));
-        btnLogOut.setOnMouseClicked(event -> borderPane.setCenter(new TextField("Insurance Card Content"))); // Just closes the application
-
-        // Assemble the BorderPane
-        borderPane.setLeft(menuBox);
-        borderPane.setCenter(contentPane);
-        borderPane.setBottom(buttonsBox);
-        borderPane.setTop(topBox);
-        borderPane.setRight(rightBox);
-
-        // Initial view
-        borderPane.setCenter(createProfileContent());
-
-        Scene scene = new Scene(borderPane, 800, 600);
-        primaryStage.setTitle("User Interface Application");
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-}
