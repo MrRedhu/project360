@@ -65,23 +65,22 @@ public class NursePortal {
 
         Scene scene = new Scene(borderPane, 800, 600);
         primaryStage.setTitle("Nurse Dashboard");
-
         primaryStage.setScene(scene);
-
     }
 
     private HBox setupButtonsBox() {
         HBox buttonsBox = new HBox(13);
         buttonsBox.setPadding(new Insets(20));
         buttonsBox.setAlignment(Pos.CENTER);
-
+        Button btnBack = new Button("Back");
         Button btnLogOut = new Button("Log Out");
-        btnLogOut.setOnAction(e -> mainApp.showLoginScreen());
 
+        btnBack.setOnMouseEntered(e-> btnBack.setCursor(Cursor.HAND));
+        btnBack.setOnMouseExited(e -> btnBack.setCursor(Cursor.DEFAULT));
         btnLogOut.setOnMouseEntered(e-> btnLogOut.setCursor(Cursor.HAND));
         btnLogOut.setOnMouseExited(e -> btnLogOut.setCursor(Cursor.DEFAULT));
 
-        buttonsBox.getChildren().addAll(btnLogOut);
+        buttonsBox.getChildren().addAll(btnBack, btnLogOut);
         return buttonsBox;
     }
 
@@ -100,13 +99,12 @@ public class NursePortal {
         lblMessages.setOnMouseClicked(event -> {
             // This line instantiates your MessageApp
             MessageApp messageApp = new MessageApp(username);
-// Creates a new stage for the message application
+            // Creates a new stage for the message application
             Stage messageStage = new Stage();
-// Starts the MessageApp using the new stage
+            // Starts the MessageApp using the new stage
             messageApp.start(messageStage);
         });
-//        lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(createInsuranceCardContent()));
-//        Implement createInsuranceCardContent() or similar methods for handling clicks on other labels
+        lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(createInsuranceCardContent()));
 
         for (Label label : new Label[]{lblProfile, lblPatientVitals, lblHealthHistory, lblMessages, lblInsuranceCard}) {
             label.setCursor(Cursor.HAND);
@@ -361,8 +359,6 @@ public class NursePortal {
         grid.add(btnSubmitVitals, 1, 5);
         GridPane.setHalignment(btnSubmitVitals, javafx.geometry.HPos.RIGHT);
 
-
-
         // Event handling for the submit button
         btnSubmitVitals.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -408,7 +404,6 @@ public class NursePortal {
         return grid;
     }
 
-
     // Method to update patient vitals in the database
     private void updatePatientVitals(Double weight, Double height, Double bodyTemperature, String bloodPressure, int age) {
         try (Connection connection = DriverManager.getConnection(DB_URL)) {
@@ -433,7 +428,6 @@ public class NursePortal {
             e.printStackTrace();
         }
     }
-
 
     private GridPane createHealthHistoryContent() {
 
@@ -525,8 +519,6 @@ public class NursePortal {
                 showAlert(AlertType.INFORMATION, "Success", "Health history updated successfully.");
             }
         });
-
-
         return grid;
     }
 
@@ -552,6 +544,26 @@ public class NursePortal {
         }
     }
 
+    private GridPane createInsuranceCardContent() {
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setPadding(new Insets(10, 10, 10, 10));
+        grid.setHgap(10);
+        grid.setVgap(10);
 
+        Label label = new Label("Insurance Card");
+        label.setStyle("-fx-font-weight: bold; -fx-text-fill: black;");
+        grid.add(label, 0, 0);
 
+        TextField textField = new TextField();
+        grid.add(textField, 1, 0);
+
+        Button btnSave = new Button("Save");
+        grid.add(btnSave, 0, 1);
+
+        Button btnCancel = new Button("Cancel");
+        grid.add(btnCancel, 1, 1);
+
+        return grid;
+    }
 }
