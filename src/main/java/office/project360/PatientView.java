@@ -120,10 +120,10 @@ public class PatientView {
 
         messageOption.setOnMouseClicked(event -> {
             // This line instantiates your MessageApp
-            MessageApp messageApp = new MessageApp();
-            // Creates a new stage for the message application
+            MessageApp messageApp = new MessageApp(username);
+// Creates a new stage for the message application
             Stage messageStage = new Stage();
-            // Starts the MessageApp using the new stage
+// Starts the MessageApp using the new stage
             messageApp.start(messageStage);
         });
 

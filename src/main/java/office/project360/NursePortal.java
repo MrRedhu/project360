@@ -30,7 +30,17 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 public class NursePortal {
+    private MainApplication mainApp;
+    private String username;
 
+
+    public NursePortal(MainApplication mainApp) {
+        this.mainApp = mainApp;
+    }
+    public NursePortal(MainApplication mainApp, String username) {
+        this.mainApp = mainApp;
+        this.username = username;
+    }
     private BorderPane borderPane = new BorderPane();
     private String currentUser = "";
 
@@ -94,10 +104,10 @@ public class NursePortal {
         lblHealthHistory.setOnMouseClicked(event -> borderPane.setCenter(createHealthHistoryContent()));
         lblMessages.setOnMouseClicked(event -> {
             // This line instantiates your MessageApp
-            MessageApp messageApp = new MessageApp();
-            // Creates a new stage for the message application
+            MessageApp messageApp = new MessageApp(username);
+// Creates a new stage for the message application
             Stage messageStage = new Stage();
-            // Starts the MessageApp using the new stage
+// Starts the MessageApp using the new stage
             messageApp.start(messageStage);
         });
 //        lblInsuranceCard.setOnMouseClicked(event -> borderPane.setCenter(createInsuranceCardContent()));

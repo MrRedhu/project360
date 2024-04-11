@@ -28,7 +28,7 @@ public class MainApplication extends Application {
                 doctorsView.show(primaryStage); // Use the same stage to show the doctor's dashboard
                 break;
             case "Nurse":
-                NursePortal nursePortal = new NursePortal();
+                NursePortal nursePortal = new NursePortal(this, username);
                 nursePortal.show(primaryStage); // Use the same stage for the nurse dashboard
                 break;
             case "Patient":

@@ -22,7 +22,12 @@ import javafx.stage.Stage;
 import java.sql.*;
 
 public class MessageApplication extends Application {
+    private String username; // Add a field to store the username
 
+    // Constructor to accept the username
+    public MessageApplication(String username) {
+        this.username = username;
+    }
     // JDBC URL, username, and password
     private static final String JDBC_URL = "jdbc:sqlite:identifier.sqlite";
     private static final String USERNAME = "your_username";
@@ -69,10 +74,6 @@ public class MessageApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Create UI components
-        Label senderUsernameLabel = new Label("Sender Username:");
-        senderUsernameField = new TextField();
-
         Label receiverUsernameLabel = new Label("Receiver Username:");
         receiverUsernameField = new TextField();
 
@@ -86,22 +87,20 @@ public class MessageApplication extends Application {
 
         Button sendButton = new Button("Send");
         sendButton.setOnAction(e -> {
-            String senderUsername = senderUsernameField.getText();
             String receiverUsername = receiverUsernameField.getText();
             String subject = subjectField.getText();
             String messageText = messageArea.getText();
 
-            if (senderUsername.isEmpty() || receiverUsername.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Please enter both sender and receiver usernames.");
+            if (receiverUsername.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Error", "Please enter receiver username.");
                 return;
             }
 
-            sendMessage(senderUsername, receiverUsername, subject, messageText);
+            sendMessage(username, receiverUsername, subject, messageText);
         });
 
         VBox root = new VBox(10);
         root.getChildren().addAll(
-                senderUsernameLabel, senderUsernameField,
                 receiverUsernameLabel, receiverUsernameField,
                 subjectLabel, subjectField,
                 messageLabel, messageArea,
@@ -113,6 +112,7 @@ public class MessageApplication extends Application {
         primaryStage.setTitle("Messaging App");
         primaryStage.show();
     }
+
 
     private void showAlert(Alert.AlertType type, String title, String content) {
         Alert alert = new Alert(type);

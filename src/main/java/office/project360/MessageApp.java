@@ -7,20 +7,25 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MessageApp extends Application {
+    private String username; // Add a field to store the username
 
+    // Constructor to accept the username
+    public MessageApp(String username) {
+        this.username = username;
+    }
     @Override
     public void start(Stage primaryStage) {
         // Create UI components
         Button sendMessageButton = new Button("Send Message");
         sendMessageButton.setOnAction(e -> {
-            MessageApplication messageApp = new MessageApplication();
+            MessageApplication messageApp = new MessageApplication(username);
             Stage messageStage = new Stage();
             messageApp.start(messageStage);
         });
 
         Button receiveMessageButton = new Button("Receive Message");
         receiveMessageButton.setOnAction(e -> {
-            ReceivedMessagesApplication receivedMessagesApp = new ReceivedMessagesApplication();
+            ReceivedMessagesApplication receivedMessagesApp = new ReceivedMessagesApplication(username);
             Stage receivedMessagesStage = new Stage();
             receivedMessagesApp.start(receivedMessagesStage);
         });

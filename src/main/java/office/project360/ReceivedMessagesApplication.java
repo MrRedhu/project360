@@ -14,6 +14,12 @@ import java.sql.*;
 
 public class ReceivedMessagesApplication extends Application {
 
+    private String username; // Add a field to store the username
+
+    // Constructor to accept the username
+    public ReceivedMessagesApplication(String username) {
+        this.username = username;
+    }
 
     // JDBC URL, username, and password
     private static final String JDBC_URL = "jdbc:sqlite:identifier.sqlite";
