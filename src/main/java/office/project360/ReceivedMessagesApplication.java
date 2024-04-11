@@ -122,7 +122,7 @@ public class ReceivedMessagesApplication extends Application {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Message Details");
         alert.setHeaderText(null);
-        alert.setContentText("Sender: " + message.getFrom() + "\nReceiver: " + usernameField.getText() + "\nSubject: " + message.getSubject() + "\nTimestamp: " + message.getTimestamp() + "\n\nMessage:\n" + message.getMessageText());
+        alert.setContentText("Sender: " + message.getFrom() + "\nReceiver: " + username + "\nSubject: " + message.getSubject() + "\nTimestamp: " + message.getTimestamp() + "\n\nMessage:\n" + message.getMessageText());
         alert.showAndWait();
     }
 
@@ -147,7 +147,7 @@ public class ReceivedMessagesApplication extends Application {
 
         Button sendButton = new Button("Send");
         sendButton.setOnAction(e -> {
-            sendMessage(usernameField.getText(), receiverUsername, subject, messageArea.getText());
+            sendMessage(username, receiverUsername, subject, messageArea.getText());
             replyStage.close();
         });
 

@@ -30,14 +30,13 @@ public class MessageApplication extends Application {
     }
     // JDBC URL, username, and password
     private static final String JDBC_URL = "jdbc:sqlite:identifier.sqlite";
-    private static final String USERNAME = "your_username";
-    private static final String PASSWORD = "your_password";
+
 
     private TextField senderUsernameField;
     private TextField receiverUsernameField;
 
     private void sendMessage(String senderUsername, String receiverUsername, String subject, String messageText) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL)) {
             // Check if receiver username exists in the users table
             if (!isValidReceiverUsername(connection, receiverUsername)) {
                 showAlert(Alert.AlertType.ERROR, "Invalid Receiver Username", "The receiver username does not exist.");
