@@ -6,10 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="8b1e1d2d-a314-4e5e-be7b-cf3a237238aa" name="Changes" comment="added the registration scene and updated the update name logic">
       <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/9803d4d6-68c1-487b-bf84-06324b7741ab.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/9803d4d6-68c1-487b-bf84-06324b7741ab.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/identifier.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/identifier.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/office/project360/MessageApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/office/project360/MessageApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/office/project360/DoctorsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/office/project360/DoctorsView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/office/project360/MainApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/office/project360/MainApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,12 +34,12 @@
     &quot;assignee&quot;: &quot;MrRedhu&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/MrRedhu/project360.git",
-    "accountId": "7b80b155-e988-4905-840f-f2ddad24c599"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MrRedhu/project360.git&quot;,
+    &quot;accountId&quot;: &quot;1122713e-eef2-479a-b8a0-12623e591e06&quot;
   }
-}]]></component>
+}</component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
       <MavenGeneralSettings>
@@ -58,9 +60,6 @@
   "keyToString": {
     "Application.MainApplication.executor": "Run",
     "Application.MessageApplication.executor": "Run",
-    "Application.NursePortal.executor": "Run",
-    "Application.Patientview.executor": "Run",
-    "Database Script.console.sql.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
@@ -72,15 +71,15 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Libraries",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.44827586",
     "settings.editor.selected.configurable": "web.server",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
     "DatabaseDriversLRU": [
       "sqlite"
-    ],
-    "RunConfigurationTargetLRU": [
-      "9803d4d6-68c1-487b-bf84-06324b7741ab"
     ]
   }
 }]]></component>
@@ -89,24 +88,13 @@
       <recent name="$PROJECT_DIR$/src/main/resources/office/project360" />
     </key>
   </component>
-  <component name="RunManager">
-    <configuration name="console.sql" type="DatabaseScript" editBeforeRun="true" nameIsGenerated="true">
-      <script-file value="$APPLICATION_CONFIG_DIR$/consoles/db/9803d4d6-68c1-487b-bf84-06324b7741ab/console.sql" />
-      <script-mode>FILE</script-mode>
-      <data-source id="9803d4d6-68c1-487b-bf84-06324b7741ab" />
-      <method v="2" />
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
-      <option name="filePath" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-18abd8497189-intellij.indexing.shared.core-IU-241.14494.240" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-IU-241.14494.240" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -118,7 +106,6 @@
       <updated>1712697317012</updated>
       <workItem from="1712697318067" duration="684000" />
       <workItem from="1712712499469" duration="10362000" />
-      <workItem from="1712793558606" duration="3721000" />
     </task>
     <task id="LOCAL-00001" summary="commit test">
       <option name="closed" value="true" />

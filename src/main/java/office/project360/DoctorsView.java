@@ -7,9 +7,15 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class DoctorsView {
+    private MainApplication mainApp; // Reference to the main application
 
     private static final double PREF_WIDTH = 300.0;
     private static final double PREF_HEIGHT = 150.0;
+
+    // Modified constructor to accept MainApplication instance
+    public DoctorsView(MainApplication mainApp) {
+        this.mainApp = mainApp;
+    }
 
     public void show(Stage primaryStage) {
         primaryStage.setTitle("Doctor's Dashboard");
@@ -18,7 +24,7 @@ public class DoctorsView {
     }
 
     private Scene createMainScene() {
-        VBox navigation = new VBox();
+        VBox navigation = new VBox(10); // Set spacing between elements in the VBox
         navigation.setPrefWidth(250);
         navigation.setPadding(new Insets(10));
 
@@ -32,13 +38,20 @@ public class DoctorsView {
 
         Button testFindingsButton = new Button("Add Test Findings");
         Button prescriptionNeededButton = new Button("Add Prescription Needed");
+        Button logoutButton = new Button("Logout"); // Logout button
+
+        // Adding extra space before the logout button
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS); // This makes the spacer expand to fill available space
 
         StackPane contentArea = new StackPane();
 
         testFindingsButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Test Findings:")));
         prescriptionNeededButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Prescription Needed:")));
+        logoutButton.setOnAction(e -> mainApp.showLoginScreen()); // Set action for logout button
 
-        navigation.getChildren().addAll(new TitledPane("Health History", healthHistoryAccordion), testFindingsButton, prescriptionNeededButton);
+        // Adding the spacer before the logout button
+        navigation.getChildren().addAll(new TitledPane("Health History", healthHistoryAccordion), testFindingsButton, prescriptionNeededButton, spacer, logoutButton);
 
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(navigation);
@@ -46,6 +59,7 @@ public class DoctorsView {
 
         return new Scene(borderPane, 800, 600);
     }
+
 
     private VBox createContentArea(String title) {
         Label label = new Label(title);
@@ -73,6 +87,7 @@ public class DoctorsView {
 
     private void saveInformation(String text, String category) {
         System.out.println("Information saved for " + category + ": " + text);
-        // TODO: Replace the above line with actual save functionality
+        // Here, you should implement the actual save functionality instead of just printing out the message.
     }
 }
+
