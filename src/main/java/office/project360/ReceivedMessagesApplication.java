@@ -23,8 +23,6 @@ public class ReceivedMessagesApplication extends Application {
 
     // JDBC URL, username, and password
     private static final String JDBC_URL = "jdbc:sqlite:identifier.sqlite";
-    private static final String USERNAME = "your_username";
-    private static final String PASSWORD = "your_password";
 
     public TextField usernameField;
     private TableView<Message> tableView;
@@ -105,7 +103,7 @@ public class ReceivedMessagesApplication extends Application {
     }
 
     private void displayReceivedMessages(String username) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL)) {
             String sql = "SELECT * FROM Messages WHERE ReceiverUsername = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, username);
@@ -169,7 +167,7 @@ public class ReceivedMessagesApplication extends Application {
     }
 
     private void sendMessage(String senderUsername, String receiverUsername, String subject, String messageText) {
-        try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+        try (Connection connection = DriverManager.getConnection(JDBC_URL)) {
             String sql = "INSERT INTO Messages (SenderUsername, ReceiverUsername, Subject, MessageText) VALUES (?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, senderUsername);
