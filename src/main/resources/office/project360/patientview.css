@@ -38,3 +38,7 @@
 .button:hover {
     -fx-background-color: #f0e68c; /* Lighter gold color on hover */
 }
+
+.diagnosis-label {
+    -fx-text-fill: white; /* Set text color to white */
+}

@@ -194,25 +194,53 @@ public class PatientView {
     }
 
     private void showDiagnosis() {
-        // Create heading for doctor's diagnosis
-        Label diagnosisHeadingLabel = new Label("Doctor's Diagnosis");
-        diagnosisHeadingLabel.getStyleClass().add("header-label");
-        diagnosisHeadingLabel.setStyle("-fx-font-size: 35px;");// Apply CSS style
+        try {
+            // Establish connection to the SQLite database
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");
 
-        // Create text area for doctor's diagnosis
-        TextArea diagnosisTextArea = new TextArea();
-        diagnosisTextArea.getStyleClass().add("text-field"); // Apply CSS style
-        diagnosisTextArea.setPrefColumnCount(20);
-        diagnosisTextArea.setPrefRowCount(10);
+            // Prepare a SQL statement to retrieve health concerns based on the username
+            String sql = "SELECT HealthConcerns FROM patients WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, username);
 
-        // Create VBox for doctor's diagnosis
-        VBox diagnosisBox = new VBox(10);
-        diagnosisBox.setAlignment(Pos.CENTER);
-        diagnosisBox.getChildren().addAll(diagnosisHeadingLabel, diagnosisTextArea);
+            // Execute the query and get the result set
+            ResultSet resultSet = statement.executeQuery();
 
-        // Displaying diagnosis in the main content area
-        borderPane.setCenter(diagnosisBox);
+            // Create heading for doctor's diagnosis
+            Label diagnosisHeadingLabel = new Label("Doctor's Diagnosis");
+            diagnosisHeadingLabel.getStyleClass().add("header-label");
+            diagnosisHeadingLabel.setStyle("-fx-font-size: 35px;");// Apply CSS style
+
+            // Create VBox for doctor's diagnosis
+            VBox diagnosisBox = new VBox(10);
+            diagnosisBox.setAlignment(Pos.CENTER);
+            diagnosisBox.getChildren().add(diagnosisHeadingLabel);
+
+            // Check if result set is empty
+            if (!resultSet.next()) {
+                System.out.println("No health concerns found for username: " + username);
+            } else {
+                // Iterate over the result set to create labels for each health concern
+                do {
+                    String healthConcern = resultSet.getString("HealthConcerns");
+                    Label healthConcernLabel = new Label(healthConcern);
+                    healthConcernLabel.getStyleClass().add("diagnosis-label"); // Apply CSS style to the label
+                    diagnosisBox.getChildren().add(healthConcernLabel);
+                } while (resultSet.next());
+            }
+
+            // Close resources
+            resultSet.close();
+            statement.close();
+            connection.close();
+
+            // Displaying diagnosis in the main content area
+            borderPane.setCenter(diagnosisBox);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
 
     private Button createButton(String text) {
         Button button = new Button(text);
