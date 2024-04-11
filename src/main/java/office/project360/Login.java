@@ -52,7 +52,7 @@ public class Login {
             }
             if (authenticate(usernameField.getText(), passwordField.getText(), selectedRole)) {
                 showAlert(Alert.AlertType.INFORMATION, "Login Successful", "Welcome to Pediatric Doctor's Office!");
-                mainApp.userLoggedIn(selectedRole); // Transition to the next scene or dashboard after showing the alert
+                mainApp.userLoggedIn(selectedRole, usernameField.getText()); // Transition to the next scene or dashboard after showing the alert
             } else {
                 showAlert(Alert.AlertType.ERROR, "Login Failed", "Invalid username, password, or role.");
             }

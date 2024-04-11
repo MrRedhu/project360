@@ -15,11 +15,21 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class PatientView {
 
     private BorderPane borderPane = new BorderPane();
     private VBox sidebar;
+    private String username; // Store the username
+
+    public PatientView(String username) {
+        this.username = username;
+    }
 
     public void show(Stage primaryStage) {
 
@@ -106,44 +116,61 @@ public class PatientView {
         sidebar.getChildren().addAll(profileOption, testResultOption, diagnosisOption);
     }
 
-    private void showProfile() {
-        // Sample patient name
-        String patientName = "John Doe";
+    public void showProfile() {
+        try {
+            // Establish connection to the SQLite database
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:identifier.sqlite");
 
-        // Create label for patient name
-        Label patientNameLabel = new Label("Hello, " + patientName);
-        patientNameLabel.getStyleClass().add("header-label"); // Apply CSS style
-        patientNameLabel.setStyle("-fx-font-size: 35pt;");
+            // Prepare a SQL statement to retrieve patient information based on username
+            String sql = "SELECT Height, Weight, BodyTemperature, BloodPressure FROM patients WHERE username = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, username);
 
-        // Create text fields for patient's height, weight, body temperature, and blood pressure
-        TextField heightTextField = new TextField();
-        heightTextField.setPromptText("Height");
+            // Execute the query and get the result set
+            ResultSet resultSet = statement.executeQuery();
 
-        TextField weightTextField = new TextField();
-        weightTextField.setPromptText("Weight");
+            // Check if the result set has a row
+            if (resultSet.next()) {
+                // Retrieve patient information from the result set
+                double height = resultSet.getDouble("Height");
+                double weight = resultSet.getDouble("Weight");
+                double bodyTemperature = resultSet.getDouble("BodyTemperature");
+                String bloodPressure = resultSet.getString("BloodPressure");
 
-        TextField temperatureTextField = new TextField();
-        temperatureTextField.setPromptText("Body Temperature");
+                // Create labels for displaying patient information
+                Label heightLabel = new Label("Height: " + height);
+                Label weightLabel = new Label("Weight: " + weight);
+                Label temperatureLabel = new Label("Body Temperature: " + bodyTemperature);
+                Label pressureLabel = new Label("Blood Pressure: " + bloodPressure);
 
-        TextField pressureTextField = new TextField();
-        pressureTextField.setPromptText("Blood Pressure");
+                // Create VBox to hold the labels
+                VBox patientDetailsBox = new VBox(10);
+                patientDetailsBox.setAlignment(Pos.CENTER);
+                patientDetailsBox.getChildren().addAll(
+                        new Label("Patient Details"),
+                        heightLabel,
+                        weightLabel,
+                        temperatureLabel,
+                        pressureLabel
+                );
 
-        // Create VBox for patient's details
-        VBox patientDetailsBox = new VBox(10);
-        patientDetailsBox.setAlignment(Pos.CENTER);
+                // Display patient information in the main content area
+                borderPane.setCenter(patientDetailsBox);
+            } else {
+                System.out.println("Patient not found.");
+            }
 
-        patientDetailsBox.getChildren().addAll(
-                patientNameLabel,
-                new Label("Patient Details"),
-                heightTextField,
-                weightTextField,
-                temperatureTextField,
-                pressureTextField
-        );
-
-        // Displaying profile in the main content area
-        borderPane.setCenter(patientDetailsBox);
+            // Close resources
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
+
+
 
     private void showTestResult() {
         // Create heading for patient's results

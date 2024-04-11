@@ -21,7 +21,7 @@ public class MainApplication extends Application {
         primaryStage.show();
     }
 
-    public void userLoggedIn(String role) {
+    public void userLoggedIn(String role, String username) {
         switch (role) {
             case "Doctor":
                 DoctorsView doctorsView = new DoctorsView();
@@ -32,7 +32,7 @@ public class MainApplication extends Application {
                 nursePortal.show(primaryStage); // Use the same stage for the nurse dashboard
                 break;
             case "Patient":
-                PatientView patientView = new PatientView();
+                PatientView patientView = new PatientView(username);
                 patientView.show(primaryStage); // Show the patient dashboard
                 break;
             default:
