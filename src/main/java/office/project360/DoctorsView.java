@@ -7,9 +7,15 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 public class DoctorsView {
+    private MainApplication mainApp; // Reference to the main application
 
     private static final double PREF_WIDTH = 300.0;
     private static final double PREF_HEIGHT = 150.0;
+
+    // Modified constructor to accept MainApplication instance
+    public DoctorsView(MainApplication mainApp) {
+        this.mainApp = mainApp;
+    }
 
     public void show(Stage primaryStage) {
         primaryStage.setTitle("Doctor's Dashboard");
@@ -32,13 +38,15 @@ public class DoctorsView {
 
         Button testFindingsButton = new Button("Add Test Findings");
         Button prescriptionNeededButton = new Button("Add Prescription Needed");
+        Button logoutButton = new Button("Logout"); // Logout button
 
         StackPane contentArea = new StackPane();
 
         testFindingsButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Test Findings:")));
         prescriptionNeededButton.setOnAction(e -> contentArea.getChildren().setAll(createContentAreaWithButtons("Add Prescription Needed:")));
+        logoutButton.setOnAction(e -> mainApp.showLoginScreen()); // Set action for logout button
 
-        navigation.getChildren().addAll(new TitledPane("Health History", healthHistoryAccordion), testFindingsButton, prescriptionNeededButton);
+        navigation.getChildren().addAll(new TitledPane("Health History", healthHistoryAccordion), testFindingsButton, prescriptionNeededButton, logoutButton); // Include logout button
 
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(navigation);
@@ -73,6 +81,7 @@ public class DoctorsView {
 
     private void saveInformation(String text, String category) {
         System.out.println("Information saved for " + category + ": " + text);
-        // TODO: Replace the above line with actual save functionality
+        // Here, you should implement the actual save functionality instead of just printing out the message.
     }
 }
+

@@ -24,7 +24,7 @@ public class MainApplication extends Application {
     public void userLoggedIn(String role, String username) {
         switch (role) {
             case "Doctor":
-                DoctorsView doctorsView = new DoctorsView();
+                DoctorsView doctorsView = new DoctorsView(this);
                 doctorsView.show(primaryStage); // Use the same stage to show the doctor's dashboard
                 break;
             case "Nurse":
