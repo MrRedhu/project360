@@ -28,25 +28,16 @@ public class ReceivedMessagesApplication extends Application {
     private TableView<Message> tableView;
 
     @Override
+    @Override
     public void start(Stage primaryStage) {
-        // Create UI components
-        Label usernameLabel = new Label("Username:");
-        usernameField = new TextField();
-
         Button showMessagesButton = new Button("Show Messages");
         showMessagesButton.setOnAction(e -> {
-            String username = usernameField.getText();
-            if (username.isEmpty()) {
-                showAlert(Alert.AlertType.ERROR, "Error", "Please enter your username.");
-                return;
-            }
             displayReceivedMessages(username);
         });
 
         VBox root = new VBox(10);
         root.setPadding(new Insets(10));
         root.getChildren().addAll(
-                usernameLabel, usernameField,
                 showMessagesButton
         );
 
@@ -101,6 +92,7 @@ public class ReceivedMessagesApplication extends Application {
 
         primaryStage.show();
     }
+
 
     private void displayReceivedMessages(String username) {
         try (Connection connection = DriverManager.getConnection(JDBC_URL)) {
